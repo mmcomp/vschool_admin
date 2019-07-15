@@ -12,7 +12,15 @@
 */
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', 'RequestController@index')->name('home');
+    Route::get('/', 'ProtocolController@index')->name('home');
+    
+    Route::prefix('/statistics_protocol_type')->group(function () {
+        Route::get('/', 'ProtocolTypeController@index');
+        Route::get('/delete/{id}', 'ProtocolTypeController@delete');
+        Route::any('/create', 'ProtocolTypeController@create');
+        Route::any('/edit/{id}', 'ProtocolTypeController@edit');
+    });
+    /*
     Route::get('/help', 'RequestController@helpMain');
     Route::get('/help/{page}', 'RequestController@helpPage');
     Route::post('/editprofile', 'RequestController@editProfile');
@@ -139,7 +147,8 @@ Route::middleware('auth')->group(function () {
         Route::any('/edit/{id}/{sequence_id}', 'SequenceController@detailEdit');
     });
     Route::any('/under', 'Controller@under');
+    */
 });
 Route::any('/login', 'Controller@login')->name('login');
-Route::any('/register', 'Controller@register');
-Route::any('/resident_login', 'Controller@rLogin')->name('rlogin');
+// Route::any('/register', 'Controller@register');
+// Route::any('/resident_login', 'Controller@rLogin')->name('rlogin');

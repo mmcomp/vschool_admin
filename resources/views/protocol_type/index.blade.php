@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 
-
 @section('extra_css')
 <!-- DataTables -->
 <link rel="stylesheet" href="/admin/plugins/datatables/dataTables.bootstrap.css">
@@ -12,14 +11,9 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
           <h1 style="background-color: #ffffff;padding: 10px;">
-            لیست قراردادها
-              <small>Protocols</small>
+            مدیریت انواع قرارداد
+              <small>Protocol Type</small>
           </h1>
-          <!-- <ol class="breadcrumb">
-              <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-              <li><a href="#">Tables</a></li>
-              <li class="active">Data tables</li>
-          </ol> -->
       </section>
 
       <!-- Main content -->
@@ -28,35 +22,43 @@
               <div class="col-xs-12">
                   <div class="box">
                       <div class="box-header">
-                          <h3 class="box-title">قرارداد ها</h3>
+                          <h3 class="box-title">نوع قرارداد</h3>
+                          <a class="btn btn-primary pull-left" href="/statistics_protocol_type/create">ثبت نوع قرارداد</a>
                       </div><!-- /.box-header -->
                       <div class="box-body">
                           <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
                               <thead>
                                 <tr>
-                                  <th>ردیف</th>
-                                  <th>نوع</th>
-                                  <th>موضوع</th>
-                                  <th>پیمانکار</th>
+                                    <th>ردیف</th>
+                                    <th>نام</th>
+                                    <th>توضیحات</th>
+                                    <th>#</th>
                                 </tr>
                               </thead>
                               <tbody>
-                              @foreach($protocols as $i=>$protocol)
+                              @foreach($protocol_types as $i=>$protocol_type)
                                 <tr>
                                   <td>{{ $i + 1 }}</td>
-                                  <td>{{ $protocol->type->name }}</td>
-                                  <td>{{ $protocol->title }}</td>
-                                  <td>{{ $protocol->contractor->name }}</td>
+                                  <td>{{ $protocol_type->name }}</td>
+                                  <td>{{ $protocol_type->description }}</td>
+                                  <td>
+                                    <a class="btn btn-success" href="/statistics_protocol_type/edit/{{ $protocol_type->id }}">
+                                    ویرایش
+                                    </a>
+                                    <a class="btn btn-danger btn-delete" href="/statistics_protocol_type/delete/{{ $protocol_type->id }}">
+                                    حذف
+                                    </a>
+                                  </td>
                                 </tr>
                               @endforeach
                               </tbody>
                               <tfoot>
-                                  <tr>
-                                    <th>ردیف</th>
-                                    <th>نوع</th>
-                                    <th>موضوع</th>
-                                    <th>پیمانکار</th>
-                                  </tr>
+                                <tr>
+                                  <th>ردیف</th>
+                                  <th>نام</th>
+                                  <th>توضیحات</th>
+                                  <th>#</th>
+                                </tr>
                               </tfoot>
                           </table>
                       </div><!-- /.box-body -->
@@ -97,6 +99,5 @@
       event.preventDefault();
     }
   });
-  var protocols = @json($protocols);
 </script>
 @endsection

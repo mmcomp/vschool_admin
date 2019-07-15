@@ -558,14 +558,13 @@ $user = Auth::user();
                   </li>
                   -->
                   @else
-                  <!--
                   <li
-                  @if($current_url=='' || $current_url=='req')
+                  @if($current_url=='' || $current_url=='home')
                    class="active"
                   @endif
                   >
                     <a href="/">
-                      <i class="fa fa-wifi"></i> <span>مدیریت وب سرویس</span> 
+                      <i class="fa fa-file-signature"></i> <span>قراردادها</span> 
                     </a>
                   </li>
                   <li class="treeview
@@ -575,29 +574,30 @@ $user = Auth::user();
                   "
                   >
                     <a>
-                      <i class="fa fa-folder-open"></i> <span>آمار</span> 
+                      <i class="fa fa-folder-open"></i> <span>اطلاعات پایه</span> 
                     </a>
                     <ul class="treeview-menu">
-                    <li
-                        @if($current_url=='statistics_coin')
+                        <li
+                        @if($current_url=='statistics_protocol_type')
                         class="active"
                         @endif
                         >
-                            <a href="/statistics_coin">
-                                <i class="fa fa-coins"></i> <span>سکه</span> 
+                            <a href="/statistics_protocol_type">
+                                <i class="fa fa-file-contract"></i> <span>انواع قرارداد</span> 
                             </a>
                         </li>
                         <li
-                        @if($current_url=='statistics_usage')
+                        @if($current_url=='statistics_certificate_type')
                         class="active"
                         @endif
                         >
-                            <a href="/statistics_usage">
-                                <i class="fa fa-user"></i> <span>استفاده</span> 
+                            <a href="/statistics_certificate_type">
+                                <i class="fa fa-certificate"></i> <span>انواع مدرک شناسایی</span> 
                             </a>
                         </li>
                     </ul>
                   </li>
+                  <!--
                   <li                  
                   @if($current_url=='fields')
                    class="active"
