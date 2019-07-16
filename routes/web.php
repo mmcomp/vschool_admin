@@ -20,6 +20,12 @@ Route::middleware('auth')->group(function () {
         Route::any('/create', 'ProtocolTypeController@create');
         Route::any('/edit/{id}', 'ProtocolTypeController@edit');
     });
+    Route::prefix('/statistics_certificate_type')->group(function () {
+        Route::get('/', 'CertificateTypeController@index');
+        Route::get('/delete/{id}', 'CertificateTypeController@delete');
+        Route::any('/create', 'CertificateTypeController@create');
+        Route::any('/edit/{id}', 'CertificateTypeController@edit');
+    });
     /*
     Route::get('/help', 'RequestController@helpMain');
     Route::get('/help/{page}', 'RequestController@helpPage');
