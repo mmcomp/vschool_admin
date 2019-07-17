@@ -12,7 +12,8 @@
 */
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', 'ProtocolController@index')->name('home');
+    Route::get('/', 'Controller@index')->name('home');
+    Route::get('/protocols', 'ProtocolController@index');
     
     Route::prefix('/statistics_protocol_type')->group(function () {
         Route::get('/', 'ProtocolTypeController@index');
