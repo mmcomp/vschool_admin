@@ -41,7 +41,7 @@
                                   <td>{{ $i + 1 }}</td>
                                   <td>{{ $protocolDoc->description }}</td>
                                   <td>
-                                    <a target="_blank" href="/storage/{{ $protocolDoc->file_path }}" title="دریافت">
+                                    <a target="_blank" href="/{{ $protocolDoc->file_path }}" title="دریافت">
                                       <i class="fas fa-download"></i>
                                     </a>
                                   </td>

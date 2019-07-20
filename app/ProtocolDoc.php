@@ -39,6 +39,10 @@ class ProtocolDoc extends Model
     }
 
     public function getExpireDateAttribute($value) {
-        return self::g2j($value);
+        if($value) {
+            return self::g2j($value);
+        }else {
+            return $value;
+        }
     }
 }

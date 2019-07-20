@@ -38,23 +38,43 @@ class Protocol extends Model
     }
 
     public function getStartAttribute($value) {
-        return self::g2j($value);
+        if($value) {
+            return self::g2j($value);
+        }else {
+            return $value;
+        }
     }
 
     public function getEndAttribute($value) {
-        return self::g2j($value);
+        if($value) {
+            return self::g2j($value);
+        }else {
+            return $value;
+        }
     }
 
     public function getRegisterAttribute($value) {
-        return self::g2j($value);
+        if($value) {
+            return self::g2j($value);
+        }else {
+            return $value;
+        }
     }
 
     public function getCreatedAtAttribute($value) {
-        return self::g2j($value);
+        if($value) {
+            return self::g2j($value);
+        }else {
+            return $value;
+        }
     }
 
     public function getUpdatedAtAttribute($value) {
-        return self::g2j($value);
+        if($value) {
+            return self::g2j($value);
+        }else {
+            return $value;
+        }
     }
 
     public function employer_agent() {
