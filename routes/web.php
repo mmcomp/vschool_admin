@@ -13,8 +13,21 @@
 
 Route::middleware('auth')->group(function () {
     Route::get('/', 'Controller@index')->name('home');
-    Route::get('/protocols', 'ProtocolController@index');
+
+    Route::prefix('/protocols')->group(function () {
+        Route::any('/', 'ProtocolController@index');
+        Route::get('/delete/{id}', 'ProtocolController@delete');
+        Route::any('/create', 'ProtocolController@create');
+        Route::any('/edit/{id}', 'ProtocolController@edit');
+    });
     
+    Route::prefix('/protocoldoc')->group(function () {
+        Route::get('/{id}', 'ProtocolDocController@theIndex');
+        Route::get('/delete/{id}', 'ProtocolDocController@delete');
+        Route::any('/create/{id}', 'ProtocolDocController@create');
+        Route::any('/edit/{id}', 'ProtocolDocController@edit');
+    });
+
     Route::prefix('/statistics_protocol_type')->group(function () {
         Route::get('/', 'ProtocolTypeController@index');
         Route::get('/delete/{id}', 'ProtocolTypeController@delete');

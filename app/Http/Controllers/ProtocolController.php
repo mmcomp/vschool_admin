@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Protocol;
+use App\ProtocolType;
 
 class ProtocolController extends Controller
 {
@@ -24,13 +25,28 @@ class ProtocolController extends Controller
                 ];
             }
         }
-        
-        $protocols = Protocol::with('employer_agent')->with('contractor_agent')->with('type')
-            ->with('employer')->with('contractor')->with('docs')->get();
-
+        $protocolTypes = ProtocolType::all();
+        if($request->getMethod()!='GET'){
+            $protocols = Protocol::with('employer_agent')->with('contractor_agent')->with('type')
+                ->with('employer')->with('contractor')->with('docs')
+                ->where(function($query) use ($request) {
+                    if($request->input('title') && trim($request->input('title'))!='') {
+                        $query->where('title', 'like', '%' . $request->input('title') . '%');
+                    }
+                    if($request->input('type') && trim($request->input('type'))!='') {
+                        $query->where('protocol_types_id', $request->input('type'));
+                    }
+                })
+                ->get();
+        }else {
+            $protocols = Protocol::with('employer_agent')->with('contractor_agent')->with('type')
+                ->with('employer')->with('contractor')->with('docs')->get();
+        }
         return view('home.admin', [
             "msgs"=>$msgs,
             "protocols"=>$protocols,
+            "protocolTypes"=>$protocolTypes,
+            "req"=>$request->all(),
         ]);
     }
 }

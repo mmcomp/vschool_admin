@@ -4,6 +4,22 @@
 @section('extra_css')
 <!-- DataTables -->
 <link rel="stylesheet" href="/admin/plugins/datatables/dataTables.bootstrap.css">
+<!-- Select2 -->
+<link href="/admin/plugins/select2/select2.min.css" rel="stylesheet" />
+<style>
+  .select2-container {
+    width: 100% !important;
+  }
+
+  .select2-selection__rendered {
+    direction: rtl !important;
+  }
+
+  .select2-results__option {
+    direction: rtl !important;
+    text-align: right !important;
+  }
+</style>
 @endsection
 
 @section('content')
@@ -29,6 +45,37 @@
                   <div class="box">
                       <div class="box-header">
                           <h3 class="box-title">قرارداد ها</h3>
+                          <div>
+                            <form method="post">
+                              @csrf
+                              <div class="col-md-6">
+                                <label>
+                                  موضوع
+                                </label>
+                                <input name="title" placeholder="موضوع" class="form-control" value="{{ isset($req['title'])?$req['title']:'' }}" />
+                              </div>
+                              <div class="col-md-6">
+                                <label>
+                                  نوع
+                                </label>
+                                <select name="type" placeholder="موضوع" class="form-control selecttwo" >
+                                  <option value="">همه</option>
+                                @foreach($protocolTypes as $i=>$protocolType)
+                                  @if(isset($req['type']) && $req['type']==$protocolType->id)
+                                  <option selected value="{{ $protocolType->id }}">{{ $protocolType->name }}</option>
+                                  @else
+                                  <option value="{{ $protocolType->id }}">{{ $protocolType->name }}</option>
+                                  @endif
+                                @endforeach
+                                </select>
+                              </div>
+                              <div class="col-md-4 col-md-pull-6" style="margin-top: 10px;">
+                                <button class="btn btn-success">
+                                فیلتر
+                                </button>
+                              </div>
+                            </form>
+                          </div>
                       </div><!-- /.box-header -->
                       <div class="box-body">
                           <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
@@ -38,6 +85,7 @@
                                   <th>نوع</th>
                                   <th>موضوع</th>
                                   <th>پیمانکار</th>
+                                  <th>#</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -47,6 +95,11 @@
                                   <td>{{ $protocol->type->name }}</td>
                                   <td>{{ $protocol->title }}</td>
                                   <td>{{ $protocol->contractor->name }}</td>
+                                  <td>
+                                    <a target="_blank" class="btn btn-primary" href="/protocoldoc/{{ $protocol->id }}" title="مدارک">
+                                      <i class="fas fa-passport"></i>
+                                    </a>
+                                  </td>
                                 </tr>
                               @endforeach
                               </tbody>
@@ -56,6 +109,7 @@
                                     <th>نوع</th>
                                     <th>موضوع</th>
                                     <th>پیمانکار</th>
+                                    <th>#</th>
                                   </tr>
                               </tfoot>
                           </table>
@@ -80,6 +134,8 @@
 @endsection
 
 @section('extra_script')
+<!-- Select2 -->
+<script src="/admin/plugins/select2/select2.min.js"></script>
 <!-- DataTables -->
 <script src="/admin/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/admin/plugins/datatables/dataTables.bootstrap.min.js"></script>
@@ -97,6 +153,6 @@
       event.preventDefault();
     }
   });
-  var protocols = @json($protocols);
+  $(".selecttwo").select2();
 </script>
 @endsection
