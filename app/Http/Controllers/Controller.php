@@ -17,7 +17,7 @@ use JWTAuth;
 use App\Users;
 // use App\Notification;
 // use App\Verification;
-// use App\User;
+use App\User;
 // use App\Resident;
 
 class Controller extends BaseController
@@ -39,9 +39,50 @@ class Controller extends BaseController
                 ];
             }
         }
+
+        $user = new User;
+        $tmpOnlineUsers = $user->allOnline();
+        $onlineUsers = [];
+        foreach($tmpOnlineUsers as $onlineUser) {
+            if(!$onlineUser->logout) {
+                $onlineUsers[] = $onlineUser;
+            }
+        }
+
         return view('home.dashboard', [
             "msgs"=>$msgs,
+            "onlineUsers"=>$onlineUsers,
         ]);
+    }
+
+    public function forceLogout(Request $request, $id) {
+        $user = User::find($id);
+        if($user) {
+            $user->logout = true;
+            $user->save();
+        }
+
+        return redirect('/');
+    }
+
+    public function changePass(Request $request) {
+        $user = Auth::getUser();
+        $credentials = ['email'=>$user->email, 'password'=>$request->input('password')];
+        if(Auth::attempt($credentials)) {
+            if($request->input('newpassword')!=$request->input('newpassword2')) {
+                $request->session()->flash('msg_danger', 'رمز جدید با تکرار آن برابر نیست');
+            }else if($request->input('newpassword')=='') {
+                $request->session()->flash('msg_danger', 'رمز جدید خالی می باشد');
+            }else {
+                $user->password = $request->input('newpassword');
+                $user->save();
+                $request->session()->flash('msg_success', 'رمز عبور با موفقیت تغییر یافت');
+            }
+        }else {
+            $request->session()->flash('msg_danger', 'رمز حال حاضر اشتباه است');
+        }
+
+        return redirect('/');
     }
 
     public function login(Request $request) {

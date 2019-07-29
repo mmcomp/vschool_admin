@@ -13,6 +13,8 @@
 
 Route::middleware('auth')->group(function () {
     Route::get('/', 'Controller@index')->name('home');
+    Route::get('/forcelogout/{id}', 'Controller@forceLogout');
+    Route::post('/changepass', 'Controller@changePass');
 
     Route::prefix('/protocols')->group(function () {
         Route::any('/', 'ProtocolController@index');

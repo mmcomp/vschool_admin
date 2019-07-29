@@ -50,13 +50,85 @@
             <div class="info-box">
               <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">امسال</span>
-                <span class="info-box-number">۱۰۳</span>
+                <span class="info-box-text">
+                    کاربران آنلاین
+                </span>
+                <span class="info-box-number">{{ count($onlineUsers) + 1 }}</span>
               </div><!-- /.info-box-content -->
             </div><!-- /.info-box -->
           </div><!-- /.col -->
         </div><!-- /.row -->
-
+        <div id="online-users" class="row">
+          <div class="col-md-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <h3 class="box-title">لیست کاربران آنلاین</h3>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                <table class="table table-bordered">
+                  <tbody><tr>
+                    <th style="width: 10px">#</th>
+                    <th>کاربر</th>
+                    <th>عملیات</th>
+                  </tr>
+                  @foreach($onlineUsers as $i => $theUser)
+                  <tr>
+                    <td>{{ $i+1 }}.</td>
+                    <td>{{ $theUser->name }}</td>
+                    <td>
+                      <a class="btn btn-danger" href="/forcelogout/{{ $theUser->id }}">
+                        Disconnect
+                      </a>
+                    </td>
+                  </tr>
+                  @endforeach
+                  <!-- <tr>
+                    <td>1.</td>
+                    <td>Update software</td>
+                    <td>
+                      <div class="progress progress-xs">
+                        <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-red">55%</span></td>
+                  </tr>
+                  <tr>
+                    <td>2.</td>
+                    <td>Clean database</td>
+                    <td>
+                      <div class="progress progress-xs">
+                        <div class="progress-bar progress-bar-yellow" style="width: 70%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-yellow">70%</span></td>
+                  </tr>
+                  <tr>
+                    <td>3.</td>
+                    <td>Cron job running</td>
+                    <td>
+                      <div class="progress progress-xs progress-striped active">
+                        <div class="progress-bar progress-bar-primary" style="width: 30%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-light-blue">30%</span></td>
+                  </tr>
+                  <tr>
+                    <td>4.</td>
+                    <td>Fix and squish bugs</td>
+                    <td>
+                      <div class="progress progress-xs progress-striped active">
+                        <div class="progress-bar progress-bar-success" style="width: 90%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-green">90%</span></td>
+                  </tr> -->
+                </tbody></table>
+              </div>
+            </div>
+            <!-- /.box -->
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-12">
             <div class="box">
@@ -162,7 +234,17 @@
       </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
   @endsection
-
+  @section('alerts')
+    @foreach($msgs as $msg)
+    <div class="alert alert-{{ $msg['type'] }} alert-dismissable" style="position: fixed;bottom: 10px;left: 10px;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4>	
+            <i class="icon fa fa-{{ $msg['icon'] }}"></i>
+        </h4>
+        {{ $msg['msg'] }}
+    </div>
+    @endforeach
+  @endsection
   @section('extra_script')
   <!-- ChartJS 1.0.1 -->
   <script src="/admin/plugins/chartjs/Chart.min.js"></script>
@@ -170,4 +252,13 @@
   <script src="/admin/dist/js/pages/dashboard2.js"></script>
   <!-- AdminLTE for demo purposes -->
   <script src="/admin/dist/js/demo.js"></script>
+  <script>
+    function showOnlineUsers(){
+      if($("#online-users").hasClass('hide')) {
+        $("#online-users").removeClass('hide');
+      }else {
+        $("#online-users").addClass('hide');
+      }
+    }
+  </script>
   @endsection

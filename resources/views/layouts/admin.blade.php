@@ -335,8 +335,8 @@ $user = Auth::user();
                                     <!-- <div class="pull-right">
                                         <a href="#" class="btn btn-default btn-flat">Profile</a>
                                     </div> -->
-                                    <div class="pull-left">
-                                        <a href="/login" class="btn btn-default btn-flat">خروج</a>
+                                    <div class="pull-left1">
+                                        <!-- <a href="/login" class="btn btn-default btn-flat">خروج</a> -->
                                         @if($user->group_id!=2)
                                         <!-- <a href="/login" class="btn btn-default btn-flat">خروج</a> -->
                                         @else
@@ -356,6 +356,25 @@ $user = Auth::user();
                                         </form>
                                         -->
                                         @endif
+                                        <form method="post"  action="/changepass">
+                                            @csrf
+                                            <label>
+                                            رمز عبور فعلی : 
+                                            </label>
+                                            <input type="password" class="form-control" name="password" /><br/>
+                                            <label>
+                                            رمز عبور جدید : 
+                                            </label>
+                                            <input type="password" class="form-control" name="newpassword" /><br/>
+                                            <label>
+                                            تکرار رمز عبور جدید : 
+                                            </label>
+                                            <input type="password" class="form-control" name="newpassword2" /><br/>
+                                            <button class="btn btn-default btn-flat">
+                                            تغییر
+                                            </button>
+                                            <a href="/login" class="btn btn-default btn-flat" style="float: left;">خروج</a>
+                                        </form>
                                     </div>
                                 </li>
                             </ul>
