@@ -25,19 +25,15 @@ $entities = [
                 <h3 class="box-title">قرارداد جدید</h3>
             </div><!-- /.box-header -->
             <div class="box-body">
-              <form method="post" >
+              <form method="post"  enctype="multipart/form-data">
                 <div class="nav-tabs-custom">
                   <ul class="nav nav-tabs pull-right">
                     <li class="active"><a href="#tab_1-1" data-toggle="tab" aria-expanded="false">مشخصات قرارداد</a></li>
                     <li class=""><a href="#tab_2-2" data-toggle="tab" aria-expanded="false">انتخاب پیمانکار</a></li>
                     <li class=""><a href="#tab_3-2" data-toggle="tab" aria-expanded="true">تاریخ ها</a></li>
-                    <li class=""><a href="#tab_4-2" data-toggle="tab" aria-expanded="true">مبلغ قرارداد و شرایط دریافت</a></li>
-                    <li class=""><a href="#tab_5-2" data-toggle="tab" aria-expanded="true">مبلغ قرارداد و شرایط پرداخت</a></li>
-                    <li class=""><a href="#tab_6-2" data-toggle="tab" aria-expanded="true">نیروها</a></li>
+                    <li class=""><a href="#tab_4-2" data-toggle="tab" aria-expanded="true">مبلغ قرارداد و شرایط</a></li>
                     <li class=""><a href="#tab_7-2" data-toggle="tab" aria-expanded="true">مستندات</a></li>
-                    <li class=""><a href="#tab_8-2" data-toggle="tab" aria-expanded="true">ضمانت نامه ها</a></li>
                     <li class=""><a href="#tab_9-2" data-toggle="tab" aria-expanded="true">کاردکس مالی</a></li>
-                    <li class=""><a href="#tab_10-2" data-toggle="tab" aria-expanded="true">سایر</a></li>
                     <!-- <li class="dropdown">
                       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         Dropdown <span class="caret"></span>
@@ -50,7 +46,7 @@ $entities = [
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
                       </ul>
                     </li> -->
-                    <!-- <li class="pull-left header"> مشخصات قرارداد<i class="fa fa-th"></i></li> -->
+                    <li class="pull-left header"> مشخصات قرارداد<i class="fa fa-th"></i></li>
                   </ul>
                   <div class="tab-content">
                     <div class="tab-pane active" id="tab_1-1">
@@ -328,83 +324,91 @@ $entities = [
                     </div>
                     <!-- /.tab-pane -->
                     <div class="tab-pane" id="tab_3-2">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                      It has survived not only five centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                      sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-                      like Aldus PageMaker including versions of Lorem Ipsum.
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label>
+                          شروع قرارداد
+                          </label>
+                          <input name="start_date" class="form-control pdate" placeholder="شروع" />
+                        </div>
+                        <div class="col-md-6">
+                          <label>
+                          پایان قرارداد
+                          </label>
+                          <input name="end_date" class="form-control pdate" placeholder="پایان" />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label>
+                          تاریخ هشدار
+                          </label>
+                          <input name="notify_date" class="form-control pdate" placeholder="هشدار" />
+                        </div>
+                      </div>
                     </div>
                     <!-- /.tab-pane -->
                     <div class="tab-pane" id="tab_4-2">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                      It has survived not only five centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                      sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-                      like Aldus PageMaker including versions of Lorem Ipsum.
-                    </div>
-                    <!-- /.tab-pane -->
-                    <div class="tab-pane" id="tab_5-2">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                      It has survived not only five centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                      sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-                      like Aldus PageMaker including versions of Lorem Ipsum.
-                    </div>
-                    <!-- /.tab-pane -->
-                    <div class="tab-pane" id="tab_6-2">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                      It has survived not only five centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                      sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-                      like Aldus PageMaker including versions of Lorem Ipsum.
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label>
+                          از تاریخ
+                          </label>
+                          <input name="pay_from_date" class="form-control pdate" placeholder="از" />
+                        </div>
+                        <div class="col-md-6">
+                          <label>
+                          تا تاریخ
+                          </label>
+                          <input name="pay_to_date" class="form-control pdate" placeholder="تا" />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label>
+                          مبلغ
+                          </label>
+                          <input name="amount" class="form-control" placeholder="مبلغ" />
+                        </div>
+                        <div class="col-md-6">
+                          <label>
+                          واحد ارزی
+                          </label>
+                          <select name="currency" class="form-control">
+                            <option value="rial">ریال</option>
+                            <option value="dollar">دلار</option>
+                            <option value="euro">یورو</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
                     <!-- /.tab-pane -->
                     <div class="tab-pane" id="tab_7-2">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                      It has survived not only five centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                      sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-                      like Aldus PageMaker including versions of Lorem Ipsum.
-                    </div>
-                    <!-- /.tab-pane -->
-                    <div class="tab-pane" id="tab_8-2">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                      It has survived not only five centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                      sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-                      like Aldus PageMaker including versions of Lorem Ipsum.
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label>
+                          فایل
+                          </label>
+                          <input type="file" name="file_path" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                          <label>
+                          توضیحات
+                          </label>
+                          <textarea name="description" class="form-control"></textarea>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label>
+                          تاریخ انقضاء
+                          </label>
+                          <input name="expire_date" class="form-control pdate" placeholder="انقضاء"/>
+                        </div>
+                      </div>
                     </div>
                     <!-- /.tab-pane -->
                     <div class="tab-pane" id="tab_9-2">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                      It has survived not only five centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                      sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-                      like Aldus PageMaker including versions of Lorem Ipsum.
-                    </div>
-                    <!-- /.tab-pane -->
-                    <div class="tab-pane" id="tab_10-2">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                      when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                      It has survived not only five centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                      sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-                      like Aldus PageMaker including versions of Lorem Ipsum.
                     </div>
                     <!-- /.tab-pane -->
                   </div>
@@ -583,8 +587,8 @@ $entities = [
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <a type="button" class="btn btn-default pull-left" data-dismiss="modal">انصراف</a>
+          <a type="button" class="btn btn-primary">ثبت</a>
         </div>
       </div>
       <!-- /.modal-content -->
