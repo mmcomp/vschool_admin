@@ -78,8 +78,37 @@
                           </div>
                       </div><!-- /.box-header -->
                       <div class="box-body">
-                          <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
-                              <thead>
+                        <div>
+                          <a class="btn btn-primary pull-left" href="/protocols/create">
+                          ثبت
+                          </a>
+                        </div>
+                        <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
+                            <thead>
+                              <tr>
+                                <th>ردیف</th>
+                                <th>نوع</th>
+                                <th>موضوع</th>
+                                <th>پیمانکار</th>
+                                <th>#</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($protocols as $i=>$protocol)
+                              <tr>
+                                <td>{{ $i + 1 }}</td>
+                                <td>{{ $protocol->type->name }}</td>
+                                <td>{{ $protocol->title }}</td>
+                                <td>{{ $protocol->contractor->name }}</td>
+                                <td>
+                                  <a target="_blank" class="btn btn-primary" href="/protocoldoc/{{ $protocol->id }}" title="مدارک">
+                                    <i class="fas fa-passport"></i>
+                                  </a>
+                                </td>
+                              </tr>
+                            @endforeach
+                            </tbody>
+                            <tfoot>
                                 <tr>
                                   <th>ردیف</th>
                                   <th>نوع</th>
@@ -87,32 +116,8 @@
                                   <th>پیمانکار</th>
                                   <th>#</th>
                                 </tr>
-                              </thead>
-                              <tbody>
-                              @foreach($protocols as $i=>$protocol)
-                                <tr>
-                                  <td>{{ $i + 1 }}</td>
-                                  <td>{{ $protocol->type->name }}</td>
-                                  <td>{{ $protocol->title }}</td>
-                                  <td>{{ $protocol->contractor->name }}</td>
-                                  <td>
-                                    <a target="_blank" class="btn btn-primary" href="/protocoldoc/{{ $protocol->id }}" title="مدارک">
-                                      <i class="fas fa-passport"></i>
-                                    </a>
-                                  </td>
-                                </tr>
-                              @endforeach
-                              </tbody>
-                              <tfoot>
-                                  <tr>
-                                    <th>ردیف</th>
-                                    <th>نوع</th>
-                                    <th>موضوع</th>
-                                    <th>پیمانکار</th>
-                                    <th>#</th>
-                                  </tr>
-                              </tfoot>
-                          </table>
+                            </tfoot>
+                        </table>
                       </div><!-- /.box-body -->
                   </div><!-- /.box -->
               </div><!-- /.col -->
