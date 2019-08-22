@@ -61,7 +61,10 @@ class JalaliDate
         $reqs = $request->all();
         foreach($reqs as $key=>$value) {
             if(strpos(strtolower($key), 'date')!==false) {
-                $reqs[$key] = JalaliDate::j2g($value);
+                $tmp = explode('/', $value);
+                if(count($tmp)==3) {
+                    $reqs[$key] = JalaliDate::j2g($value);
+                }
             }
         }
         $request->replace($reqs);

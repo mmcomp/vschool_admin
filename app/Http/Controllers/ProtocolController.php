@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Agent;
 use App\Protocol;
 use App\ProtocolType;
+use App\ProtocolDoc;
 use App\Service;
 use App\ServicesDesc;
 use App\Unit;
@@ -76,7 +77,6 @@ class ProtocolController extends Controller
         $companies = Company::where('id', '>', 0)->with(['ceo', 'city.province', 'service', 'ownership'])->get();
         $ownerships = Ownership::all();
         $agents = Agent::all();
-        // dump($companies->toArray());
         $protocol_types = ProtocolType::all();
         $formality_statuses = FormalityStatus::all();
         $formality_types = FormalityType::all();
@@ -99,20 +99,35 @@ class ProtocolController extends Controller
             ]);
         }
 
-        if(!$request->file_path) {
-            $request->session()->flash('msg_danger', 'ارسال مدرک الزامی است');
-            return redirect('/protocol');
+        $file_pathes = [];
+        if($request->file_path) {
+            $files = $request->file('file_path');
+            foreach($files as $file_path) {
+                $file_pathes[] = $file_path->store('contract_docs');
+            }
         }
-        $protocolDoc->description = $request->input('description');
-        $protocolDoc->protocols_id = $id;
-        $file = $request->file_path->store('docs');
-        $protocolDoc->file_path = $file;
-        if($request->input('expire_date') && trim($request->input('expire_date'))!='') {
-            $protocolDoc->expire_date = $request->input('expire_date');
+        $protocol = new Protocol;
+        $changed = false;
+        foreach($request->all() as $key=>$value) {
+            if($key!='file_path' && $protocol->$key && $value) {
+                $protocol->$key = $value;
+                $changed = true;
+            }
         }
-        $protocolDoc->save();
-        
-        $request->session()->flash('msg_success', 'مدرک قرارداد مورد نظر با موفقیت ثبت شد');
-        return redirect('/protocol');
+        if($changed) {
+            $protocol->save();
+            foreach($file_pathes as $file_path) {
+                $protocolDoc = new ProtocolDoc;
+                $protocolDoc->protocols_id = $protocol->id;
+                $protocolDoc->file_path;
+                $protocolDoc->expire_date = $request->input('expire_date', null);
+                $protocolDoc->description = $request->input('description', '');
+                $protocolDoc->save();
+            }
+            $request->session()->flash('msg_success', 'قرارداد مورد نظر با موفقیت ثبت شد');
+            return redirect('/protocols');
+        }
+
+        return redirect('/protocols/create');
     }
 }

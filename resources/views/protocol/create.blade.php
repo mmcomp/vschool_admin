@@ -26,6 +26,7 @@ $entities = [
             </div><!-- /.box-header -->
             <div class="box-body">
               <form method="post"  enctype="multipart/form-data">
+                @csrf
                 <div class="nav-tabs-custom">
                   <ul class="nav nav-tabs pull-right">
                     <li class="active"><a href="#tab_1-1" data-toggle="tab" aria-expanded="false">مشخصات قرارداد</a></li>
@@ -33,7 +34,7 @@ $entities = [
                     <li class=""><a href="#tab_3-2" data-toggle="tab" aria-expanded="true">تاریخ ها</a></li>
                     <li class=""><a href="#tab_4-2" data-toggle="tab" aria-expanded="true">مبلغ قرارداد و شرایط</a></li>
                     <li class=""><a href="#tab_7-2" data-toggle="tab" aria-expanded="true">مستندات</a></li>
-                    <li class=""><a href="#tab_9-2" data-toggle="tab" aria-expanded="true">کاردکس مالی</a></li>
+                    <!-- <li class=""><a href="#tab_9-2" data-toggle="tab" aria-expanded="true">کاردکس مالی</a></li> -->
                     <!-- <li class="dropdown">
                       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         Dropdown <span class="caret"></span>
@@ -389,7 +390,7 @@ $entities = [
                           <label>
                           فایل
                           </label>
-                          <input type="file" name="file_path" class="form-control" />
+                          <input type="file" name="file_path[]" class="form-control" multiple />
                         </div>
                         <div class="col-md-6">
                           <label>
@@ -405,11 +406,17 @@ $entities = [
                           </label>
                           <input name="expire_date" class="form-control pdate" placeholder="انقضاء"/>
                         </div>
+                        <div class="col-md-6">
+                          <br/>
+                          <button class="btn btn-warning">
+                          ثبت قرارداد
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <!-- /.tab-pane -->
-                    <div class="tab-pane" id="tab_9-2">
-                    </div>
+                    <!-- <div class="tab-pane" id="tab_9-2">
+                    </div> -->
                     <!-- /.tab-pane -->
                   </div>
                   <!-- /.tab-content -->
