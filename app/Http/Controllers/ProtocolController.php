@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Agent;
 use App\Protocol;
@@ -56,6 +57,7 @@ class ProtocolController extends Controller
             $protocols = Protocol::with('employer_agent')->with('contractor_agent')->with('type')
                 ->with('employer')->with('contractor')->with('docs')->get();
         }
+        
         return view('protocol.index', [
             "msgs"=>$msgs,
             "protocols"=>$protocols,
@@ -74,14 +76,60 @@ class ProtocolController extends Controller
         $provinces = Province::all();
         $transactions = Transaction::all();
         $winner_select_ways = WinnerSelectWay::all();
-        $companies = Company::where('id', '>', 0)->with(['ceo', 'city.province', 'service', 'ownership'])->get();
+        $isSearch = ($request->input('is_search')=='1');
+        $companyAdd = $request->session()->get('company_add');
+        $theCompany = null;
+        if(!$isSearch) {
+            $companies = Company::where('id', '>', 0)->with(['ceo', 'city.province', 'service', 'ownership'])->get();
+        }else {
+            $companyAdd = true;
+            $ceosIds = [];
+            if((trim($request->input('search_company_fname', ''))!='' || trim($request->input('search_company_lname', ''))!='')) {
+                $ceos = Agent::where('fname', 'like', '%' . trim($request->input('search_company_fname', '')) . '%')->where('lname', 'like', '%' . trim($request->input('search_company_lname', '')) . '%')->get();
+                foreach($ceos as $ceo) {
+                    $ceosIds[] = $ceo->id;
+                }
+            }
+            if(count($ceosIds)==0 && (trim($request->input('search_company_fname', ''))!='' || trim($request->input('search_company_lname', ''))!='')) {
+                $companies = [];
+            }else {
+                $companies = Company::where(function($query) use ($request) {
+                    if($request->input('search_company_name')) {
+                        $query->where('name', 'like', '%' . trim($request->input('search_company_name')) . '%');
+                    }
+                })->where(function($query) use ($ceosIds) {
+                    if(count($ceosIds)>0) {
+                        $query->whereIn('ceo_agents_id', $ceosIds);
+                    }
+                })->with(['ceo', 'city.province', 'service', 'ownership'])->get();
+            }
+            if($request->input('company_edit_id')) {
+                $theCompany = Company::find($request->input('company_edit_id'));
+            }
+        }
         $ownerships = Ownership::all();
         $agents = Agent::all();
         $protocol_types = ProtocolType::all();
         $formality_statuses = FormalityStatus::all();
         $formality_types = FormalityType::all();
-        if(!$request->isMethod('post')) {
+        $icons = [
+            "success"=>"check",
+            "danger"=>"ban"
+        ];
+        $msgs = [];
+        $sessions = $request->session()->all();
+        foreach($sessions as $key=>$value) {
+            if(strpos($key, 'msg_')!==false && isset($icons[str_replace('msg_', '', $key)])) {
+                $msgs[] = [
+                    "msg"=>$value,
+                    "type"=>str_replace('msg_', '', $key),
+                    "icon"=>$icons[str_replace('msg_', '', $key)],
+                ];
+            }
+        }
+        if(!$request->isMethod('post') || $isSearch) {
             return view('protocol.create', [
+                "msgs"=>$msgs,
                 "services"=>$services,
                 "services_descs"=>$services_descs,
                 "units"=>$units,
@@ -95,7 +143,10 @@ class ProtocolController extends Controller
                 "formality_statuses"=>$formality_statuses,
                 "formality_types"=>$formality_types,
                 "ownerships"=>$ownerships,
-                "agents"=>$agents
+                "agents"=>$agents,
+                "companyAdd"=>$companyAdd,
+                "data"=>$request->all(),
+                "theCompany"=>$theCompany
             ]);
         }
 

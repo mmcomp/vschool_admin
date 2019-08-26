@@ -25,12 +25,17 @@ $entities = [
                 <h3 class="box-title">قرارداد جدید</h3>
             </div><!-- /.box-header -->
             <div class="box-body">
-              <form method="post"  enctype="multipart/form-data">
+              <form method="post" id="main-form" enctype="multipart/form-data">
                 @csrf
                 <div class="nav-tabs-custom">
                   <ul class="nav nav-tabs pull-right">
+                    @if(!$companyAdd)
                     <li class="active"><a href="#tab_1-1" data-toggle="tab" aria-expanded="false">مشخصات قرارداد</a></li>
                     <li class=""><a href="#tab_2-2" data-toggle="tab" aria-expanded="false">انتخاب پیمانکار</a></li>
+                    @else
+                    <li class=""><a href="#tab_1-1" data-toggle="tab" aria-expanded="false">مشخصات قرارداد</a></li>
+                    <li class="active"><a href="#tab_2-2" data-toggle="tab" aria-expanded="false">انتخاب پیمانکار</a></li>
+                    @endif
                     <li class=""><a href="#tab_3-2" data-toggle="tab" aria-expanded="true">تاریخ ها</a></li>
                     <li class=""><a href="#tab_4-2" data-toggle="tab" aria-expanded="true">مبلغ قرارداد و شرایط</a></li>
                     <li class=""><a href="#tab_7-2" data-toggle="tab" aria-expanded="true">مستندات</a></li>
@@ -50,7 +55,10 @@ $entities = [
                     <li class="pull-left header"> مشخصات قرارداد<i class="fa fa-th"></i></li>
                   </ul>
                   <div class="tab-content">
-                    <div class="tab-pane active" id="tab_1-1">
+                    <div class="tab-pane
+                    @if(!$companyAdd)
+                     active
+                    @endif" id="tab_1-1">
                       <div class="row">
                         <div class="col-md-6">
                           <label>
@@ -244,19 +252,23 @@ $entities = [
                       </div>
                     </div>
                     <!-- /.tab-pane -->
-                    <div class="tab-pane" id="tab_2-2">
+                    <div class="tab-pane
+                    @if($companyAdd)
+                     active
+                    @endif" id="tab_2-2">
+                      <input type="hidden" name="contractor_company_id" id="contractor_company_id" value="{{ isset($data['contractor_company_id'])?$data['contractor_company_id']:'0' }}" />
                       <div class="row">
                         <div class="col-md-6">
                           <label>
                           نام شرکت 
                           </label>
-                          <input name="name" class="form-control" placeholder="نام شرکت" />
+                          <input name="search_company_name" id="search_company_name" class="form-control" placeholder="نام شرکت" value="{{ isset($data['search_company_name'])?$data['search_company_name']:'' }}" />
                         </div>
                         <div class="col-md-6">
                           <label>
                           نام شخص/مدیرعامل 
                           </label>
-                          <input name="fname" class="form-control" placeholder="نام" />
+                          <input name="search_company_fname" id="search_company_fname" class="form-control" placeholder="نام" value="{{ isset($data['search_company_fname'])?$data['search_company_fname']:'' }}" />
                         </div>
                       </div>
                       <div class="row">
@@ -264,11 +276,13 @@ $entities = [
                           <label>
                           نام خانوادگی شخص/مدیرعامل 
                           </label>
-                          <input name="lname" class="form-control" placeholder="نام خانوادگی" />
+                          <input name="search_company_lname" id="search_company_lname" class="form-control" placeholder="نام خانوادگی" value="{{ isset($data['search_company_lname'])?$data['search_company_lname']:'' }}" />
                         </div>
                         <div class="col-md-6">
                           <br/>
-                          <a class="btn btn-primary" onclick="searchCompany();" >جستجو</a>
+                          <input type="hidden" value="" name="is_search" id="is_search" />
+                          <input type="hidden" value="" name="company_edit_id" id="company_edit_id" />
+                          <button onclick="$('#is_search').val(1);" class="btn btn-primary" >جستجو</button>
                           <a class="btn btn-success" data-toggle="modal" data-target="#modal-company">جدید</a>
                         </div>
                       </div>
@@ -308,13 +322,21 @@ $entities = [
                               <td>{{ ($company->service)?$company->service->name:'' }}</td>
                               <td>{{ ($company->ownership)?$company->ownership->name:'' }}</td>
                               <td>{{ $entities[$company->entity] }}</td>
+                              @if($company->id==(isset($data['contractor_company_id'])?(int)$data['contractor_company_id']:0))
                               <td>
-                                <a target="_blank" class="btn btn-primary" href="/companies/select/{{ $company->id }}" title="انتخاب">
+                                <a class="btn btn-success"  href="#" title="انتخاب شده">
+                                  <i class="fas fa-check-circle"></i>
+                                </a>
+                              </td>
+                              @else
+                              <td>
+                                <a target="_blank" class="btn btn-primary" onclick="selectCompany({{ $company->id }});return false;" href="#" title="انتخاب">
                                   <i class="fas fa-check"></i>
                                 </a>
                               </td>
+                              @endif
                               <td>
-                                <a target="_blank" class="btn btn-primary" href="/companies/edit/{{ $company->id }}" title="ویرایش">
+                                <a target="_blank" class="btn btn-primary"  onclick="editCompany({{ $company->id }});return false;" href="#" title="ویرایش">
                                   <i class="fas fa-pen"></i>
                                 </a>
                               </td>
@@ -436,6 +458,9 @@ $entities = [
             <span aria-hidden="true">×</span></button>
           <h4 class="modal-title">ثبت پیمانکار</h4>
         </div>
+        <form method="post" action="company">
+        @csrf
+        <input type="hidden" name="id" value="{{ ($theCompany)?$theCompany->id:0 }}" />
         <div class="modal-body">
           <div class="row">
             <div class="col-md-6">
@@ -443,16 +468,16 @@ $entities = [
                شخصیت طرف قرارداد
               </label>
               <select name="entity" class="form-control">
-                <option value="unknown">نامشخص</option>
-                <option value="real">حقیقی</option>
-                <option value="legal">حقوقی</option>
+                <option value="unknown"{{ ($theCompany && $theCompany->entity=='unknown')?' selected':'' }}>نامشخص</option>
+                <option value="real"{{ ($theCompany && $theCompany->entity=='real')?' selected':'' }}>حقیقی</option>
+                <option value="legal"{{ ($theCompany && $theCompany->entity=='legal')?' selected':'' }}>حقوقی</option>
               </select>
             </div>
             <div class="col-md-6">
               <label>
                 شماره ثبت شرکت
               </label>
-              <input name="registration_number" class="form-control" placeholder="شماره ثبت" />
+              <input name="registration_number" class="form-control" placeholder="شماره ثبت" value="{{ ($theCompany)?$theCompany->registration_number:'' }}" />
             </div>
           </div>
           <div class="row">
@@ -460,7 +485,7 @@ $entities = [
               <label>
                نام شرکت
               </label>
-              <input name="name" class="form-control" placeholder="نام" />
+              <input name="name" class="form-control" placeholder="نام" value="{{ ($theCompany)?$theCompany->name:'' }}" />
             </div>
             <div class="col-md-6">
               <label>
@@ -469,7 +494,11 @@ $entities = [
               <select name="services_id" class="form-control">
                 <option value="0"></option>
                 @foreach($services as $service)
+                @if($theCompany && $theCompany->services_id==$service->id)
+                <option value="{{ $service->id }}" selected>{{ $service->name }}</option>
+                @else
                 <option value="{{ $service->id }}">{{ $service->name }}</option>
+                @endif
                 @endforeach
               </select>
             </div>
@@ -482,7 +511,11 @@ $entities = [
               <select name="ownerships_id" class="form-control">
                 <option value="0"></option>
                 @foreach($ownerships as $service)
+                @if($theCompany && $theCompany->ownerships_id==$service->id)
+                <option value="{{ $service->id }}" selected>{{ $service->name }}</option>
+                @else
                 <option value="{{ $service->id }}">{{ $service->name }}</option>
+                @endif
                 @endforeach
               </select>
             </div>
@@ -490,7 +523,7 @@ $entities = [
               <label>
                کد اقتصادی
               </label>
-              <input name="economic_code" class="form-control" placeholder="کد اقتصادی" />
+              <input name="economic_code" class="form-control" placeholder="کد اقتصادی" value="{{ ($theCompany)?$theCompany->economic_code:'' }}" />
             </div>
           </div>
           <div class="row">
@@ -498,13 +531,13 @@ $entities = [
               <label>
                مجوز تاسیس دفتر
               </label>
-              <input name="office_establishment_license" class="form-control" placeholder="مجوز تاسیس" />
+              <input name="office_establishment_license" class="form-control" placeholder="مجوز تاسیس" value="{{ ($theCompany)?$theCompany->office_establishment_license:'' }}" />
             </div>
             <div class="col-md-6">
               <label>
                شماره گواهینامه
               </label>
-              <input name="license_number" class="form-control" placeholder="گواهینامه" />
+              <input name="license_number" class="form-control" placeholder="گواهینامه" value="{{ ($theCompany)?$theCompany->license_number:'' }}" />
             </div>
           </div>
           <div class="row">
@@ -512,13 +545,13 @@ $entities = [
               <label>
                نام آژانس/کلینیک/دفتر
               </label>
-              <input name="agency_name" class="form-control" placeholder="نام دفتر" />
+              <input name="agency_name" class="form-control" placeholder="نام دفتر" value="{{ ($theCompany)?$theCompany->agency_name:'' }}" />
             </div>
             <div class="col-md-6">
               <label>
                شناسه ملی
               </label>
-              <input name="national_id" class="form-control" placeholder="شناسه ملی" />
+              <input name="national_id" class="form-control" placeholder="شناسه ملی" value="{{ ($theCompany)?$theCompany->national_id:'' }}" />
             </div>
           </div>
           <div class="row">
@@ -526,13 +559,13 @@ $entities = [
               <label>
                آدرس طرف قرارداد
               </label>
-              <input name="address" class="form-control" placeholder="آدرس" />
+              <input name="address" class="form-control" placeholder="آدرس" value="{{ ($theCompany)?$theCompany->address:'' }}" />
             </div>
             <div class="col-md-6">
               <label>
                کدپستی
               </label>
-              <input name="postal_code" class="form-control" placeholder="کد پستی" />
+              <input name="postal_code" class="form-control" placeholder="کد پستی" value="{{ ($theCompany)?$theCompany->postal_code:'' }}" />
             </div>
           </div>
           <div class="row">
@@ -554,7 +587,11 @@ $entities = [
               <select id="cities_id" name="cities_id" class="form-control">
                 <option value="0"></option>
                 @foreach($cities as $service)
+                @if($theCompany && $theCompany->cities_id==$service->id)
+                <option value="{{ $service->id }}" selected>{{ $service->name }}</option>
+                @else‍
                 <option value="{{ $service->id }}">{{ $service->name }}</option>
+                @endif
                 @endforeach
               </select>
             </div>
@@ -564,13 +601,13 @@ $entities = [
               <label>
                تلفن ثابت
               </label>
-              <input name="tells" class="form-control" placeholder="تلفن ثابت" />
+              <input name="tells" class="form-control" placeholder="تلفن ثابت" value="{{ ($theCompany)?$theCompany->tells:'' }}" />
             </div>
             <div class="col-md-6">
               <label>
                تلفن همراه
               </label>
-              <input name="mobile" class="form-control" placeholder="تلفن همراه" />
+              <input name="mobile" class="form-control" placeholder="تلفن همراه" value="{{ ($theCompany)?$theCompany->mobile:'' }}" />
             </div>
           </div>
           <div class="row">
@@ -578,7 +615,7 @@ $entities = [
               <label>
                پست الکترونیک
               </label>
-              <input name="tells" class="form-control" placeholder="تلفن ثابت" />
+              <input name="email" class="form-control" placeholder="ایمیل" value="{{ ($theCompany)?$theCompany->email:'' }}" />
             </div>
             <div class="col-md-6">
               <label>
@@ -587,7 +624,11 @@ $entities = [
               <select name="ceo_agents_id" class="form-control selecttwo">
                 <option value="0"></option>
                 @foreach($agents as $service)
+                @if($theCompany && $theCompany->ceo_agents_id==$service->id)
+                <option value="{{ $service->id }}" selected>{{ $service->fname }} {{ $service->lname }}</option>
+                @else‍
                 <option value="{{ $service->id }}">{{ $service->fname }} {{ $service->lname }}</option>
+                @endif
                 @endforeach
               </select>
             </div>
@@ -595,13 +636,26 @@ $entities = [
         </div>
         <div class="modal-footer">
           <a type="button" class="btn btn-default pull-left" data-dismiss="modal">انصراف</a>
-          <a type="button" class="btn btn-primary">ثبت</a>
+          <button class="btn btn-primary">ثبت</button>
         </div>
+        </form>
       </div>
       <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
   </div>
+@endsection
+
+@section('alerts')
+  @foreach($msgs as $msg)
+  <div class="alert alert-{{ $msg['type'] }} alert-dismissable" style="position: fixed;bottom: 10px;left: 10px;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4>	
+          <i class="icon fa fa-{{ $msg['icon'] }}"></i>
+      </h4>
+      {{ $msg['msg'] }}
+  </div>
+  @endforeach
 @endsection
 
 @section('extra_script')
@@ -611,6 +665,17 @@ $entities = [
 <script src="/admin/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/admin/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script>
+  function selectCompany(company_id) {
+    $("#is_search").val(1);
+    $("#contractor_company_id").val(company_id);
+    $("#main-form").submit();
+  }
+  
+  function editCompany(company_id) {
+    $("#is_search").val(1);
+    $("#company_edit_id").val(company_id);
+    $("#main-form").submit();
+  }
   $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,
@@ -620,5 +685,10 @@ $entities = [
       "autoWidth": false
   });
   // $(".selecttwo").select2();
+  $(document).ready(function() {
+    @if($theCompany && $theCompany->id)
+    $("#modal-company").modal('show');
+    @endif
+  });
 </script>
 @endsection
