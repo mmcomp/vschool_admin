@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>رسیدگی و نظارت</title>
+    <title>یادآموز</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.4 -->
@@ -21,7 +21,7 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body class="login-page text-center" style="background-image: url(/admin/dist/img/mashhad.png);background-position: center;background-repeat: no-repeat;background-size: cover;">
+  <body class="login-page text-center" style="background-image: url(/admin/dist/img/vschool_back.jpg);background-position: center;background-repeat: no-repeat;background-size: cover;">
     @if($msg!='')
     <div class="alert alert-{{ $msg_type }}">
     {{ $msg }}
@@ -29,10 +29,10 @@
     @endif
     <div class="login-box">
       <div class="login-logo" style="background: #d4ead7;padding: 5px;margin-bottom: 0px !important;">
-        <a href="/"><b>رسیدگی</b>نظارت</a>
+        <a href="/"><b>یاد</b>آموز</a>
       </div><!-- /.login-logo -->
       <div class="login-box-body">
-        <p class="login-box-msg">برای استفاده از پنل سامانه رسیدگی و نظارت وارد شوید</p>
+        <p class="login-box-msg" style="direction: rtl;">برای استفاده از پنل سامانه یادآموز وارد شوید</p>
         <form action="" method="post">
             @csrf
           <div class="form-group has-feedback">

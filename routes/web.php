@@ -12,9 +12,34 @@
 */
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', 'Controller@index')->name('home');
+    Route::get('/', 'ChapterController@index')->name('home');
     Route::get('/forcelogout/{id}', 'Controller@forceLogout');
     Route::post('/changepass', 'Controller@changePass');
+
+    Route::prefix('/course')->group(function () {
+        Route::any('/', 'CourseController@index');
+        Route::get('/delete/{id}', 'CourseController@delete');
+        Route::any('/create', 'CourseController@create');
+        Route::any('/edit/{id}', 'CourseController@edit');
+    });
+    
+    Route::prefix('/lesson')->group(function () {
+        Route::any('/', 'LessonController@index');
+        Route::get('/delete/{id}', 'LessonController@delete');
+        Route::any('/create', 'LessonController@create');
+        Route::any('/edit/{id}', 'LessonController@edit');
+        Route::any('/page/{id}', 'LessonController@page');
+        Route::any('/page_create/{id}', 'LessonController@pageCreate');
+        Route::any('/page_edit/{id}', 'LessonController@pageEdit');
+        Route::any('/page_delete/{id}', 'LessonController@pageDelete');
+    });
+
+    Route::prefix('/chapter')->group(function () {
+        Route::any('/', 'ChapterController@index');
+        Route::get('/delete/{id}', 'ChapterController@delete');
+        Route::any('/create', 'ChapterController@create');
+        Route::any('/edit/{id}', 'ChapterController@edit');
+    });
 
     Route::prefix('/protocols')->group(function () {
         Route::any('/', 'ProtocolController@index');

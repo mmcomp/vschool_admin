@@ -15,10 +15,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use JWTAuth;
 
 use App\Users;
-// use App\Notification;
-// use App\Verification;
 use App\User;
-// use App\Resident;
 
 class Controller extends BaseController
 {
