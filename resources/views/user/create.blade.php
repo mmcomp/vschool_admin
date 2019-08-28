@@ -10,12 +10,12 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
           <h1>
-            @if($protocolDoc->id)
+            @if($teacher->id)
             ویرایش 
             @else
             ثبت
             @endif
-            مدرک قرارداد
+            متخصص
           </h1>
       </section>
 
@@ -25,7 +25,7 @@
               <div class="col-xs-12">
                   <div class="box">
                       <div class="box-header">
-                          <h3 class="box-title">مدرک قرارداد {{ $protocol->title }}</h3>
+                          <h3 class="box-title">متخصص</h3>
                       </div><!-- /.box-header -->
                       <div class="box-body">
                         <form method="post" enctype="multipart/form-data">
@@ -33,19 +33,25 @@
                             <div class="row">
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <label for="name">فایل</label>
-                                        <input type="file" class="form-control" id="file_path" name="file_path" >
-                                    </div>
+                                        <label for="name">نام</label>
+                                        <input type="text" class="form-control" id="fname" name="fname" placeholder="نام" value="{{ ($teacher && $teacher->fname)?$teacher->fname:'' }}">
+                                    </div> 
+
+                                    <div class="form-group">
+                                        <label for="name">ایمیل</label>
+                                        <input type="email" required class="form-control" id="email" name="email" placeholder="ایمیل" value="{{ ($teacher && $teacher->email)?$teacher->email:'' }}">
+                                    </div> 
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <label for="name">توضحیات</label>
-                                        <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات" value="{{ ($protocolDoc && $protocolDoc->description)?$protocolDoc->description:'' }}">
-                                    </div>    
+                                        <label for="name">نام خانوادگی</label>
+                                        <input type="text" class="form-control" id="lname" name="lname" placeholder="نام خانوادگی" value="{{ ($teacher && $teacher->lname)?$teacher->lname:'' }}">
+                                    </div>  
+
                                     <div class="form-group">
-                                        <label for="expire_date">تاریخ انقضا</label>
-                                        <input type="text" class="form-control pdate" id="expire_date" name="expire_date" placeholder="تاریخ انقضا" value="{{ ($protocolDoc && $protocolDoc->expire_date)?$protocolDoc->expire_date:'' }}">
-                                    </div>                              
+                                        <label for="name">رمز عبور</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="رمز" value="{{ ($teacher && $teacher->password)?$teacher->password:'' }}">
+                                    </div>                            
                                 </div>
                                 <div class="col-xs-12">
                                     <button class="btn btn-primary pull-left">

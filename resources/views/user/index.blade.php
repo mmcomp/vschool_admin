@@ -7,12 +7,12 @@
 
 @section('content')
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper" style="background: url('/admin/dist/img/mashhad.png');">
+  <div class="content-wrapper" style="background: url('/admin/dist/img/vschool_back.jpg');">
       <!-- Content Header (Page header) -->
       <section class="content-header">
           <h1 style="background-color: #ffffff;padding: 10px;">
-            مدیریت مدارک قرارداد
-            <small>{{ $protocol->title }}</small>
+            مدیریت متخصصین
+            <small>Teachers</small>
           </h1>
       </section>
 
@@ -22,34 +22,35 @@
               <div class="col-xs-12">
                   <div class="box">
                       <div class="box-header">
-                          <h3 class="box-title">مدارک قرارداد</h3>
-                          <a class="btn btn-primary pull-left" href="/protocoldoc/create/{{ $protocol->id }}">ثبت مدرک قرارداد</a>
+                          <h3 class="box-title">متخصص</h3>
+                          <a class="btn btn-primary pull-left" href="/user/create">ثبت متخصص</a>
                       </div><!-- /.box-header -->
                       <div class="box-body">
                           <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
                               <thead>
                                 <tr>
-                                    <th>ردیف</th>
-                                    <th>توضیحات</th>
-                                    <th>فایل</th>
-                                    <th>#</th>
+                                  <th>ردیف</th>
+                                  <th>نام</th>
+                                  <th>نام خانوادگی</th>
+                                  <th>ایمیل</th>
+                                  <th>#</th>
                                 </tr>
                               </thead>
                               <tbody>
-                              @foreach($protocolDocs as $i=>$protocolDoc)
+                              @foreach($teachers as $i=>$teacher)
                                 <tr>
                                   <td>{{ $i + 1 }}</td>
-                                  <td>{{ $protocolDoc->description }}</td>
+                                  <td>{{ $teacher->fname }}</td>
+                                  <td>{{ $teacher->lname }}</td>
+                                  <td>{{ $teacher->email }}</td>
                                   <td>
-                                    <a target="_blank" href="/{{ $protocolDoc->file_path }}" title="دریافت">
-                                      <i class="fas fa-download"></i>
+                                    <a class="btn btn-primary" href="/user/course/{{ $teacher->id }}">
+                                    دسترسی
                                     </a>
-                                  </td>
-                                  <td>
-                                    <a class="btn btn-success" href="/protocoldoc/edit/{{ $protocolDoc->id }}">
+                                    <a class="btn btn-success" href="/user/edit/{{ $teacher->id }}">
                                     ویرایش
                                     </a>
-                                    <a class="btn btn-danger btn-delete" href="/protocoldoc/delete/{{ $protocolDoc->id }}">
+                                    <a class="btn btn-danger btn-delete" href="/user/delete/{{ $teacher->id }}">
                                     حذف
                                     </a>
                                   </td>
@@ -59,8 +60,9 @@
                               <tfoot>
                                 <tr>
                                   <th>ردیف</th>
-                                  <th>توضیحات</th>
-                                  <th>فایل</th>
+                                  <th>نام</th>
+                                  <th>نام خانوادگی</th>
+                                  <th>ایمیل</th>
                                   <th>#</th>
                                 </tr>
                               </tfoot>

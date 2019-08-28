@@ -16,6 +16,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/forcelogout/{id}', 'Controller@forceLogout');
     Route::post('/changepass', 'Controller@changePass');
 
+    Route::prefix('/school')->group(function () {
+        Route::any('/', 'SchoolController@index');
+        Route::get('/delete/{id}', 'SchoolController@delete');
+        Route::any('/create', 'SchoolController@create');
+        Route::any('/edit/{id}', 'SchoolController@edit');
+    });
+
+    Route::prefix('/user')->group(function () {
+        Route::any('/', 'UserController@index');
+        Route::get('/delete/{id}', 'UserController@delete');
+        Route::any('/create', 'UserController@create');
+        Route::any('/edit/{id}', 'UserController@edit');
+        Route::any('/course/{id}', 'UserController@course');
+        Route::get('/course_delete/{id}/{course_id}', 'UserController@courseDelete');
+        Route::any('/course_create/{id}', 'UserController@courseCreate');
+    });
+
     Route::prefix('/course')->group(function () {
         Route::any('/', 'CourseController@index');
         Route::get('/delete/{id}', 'CourseController@delete');

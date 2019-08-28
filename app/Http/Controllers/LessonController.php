@@ -228,13 +228,19 @@ class LessonController extends Controller
         // $user = Auth::user();
         // $user->load('courses');
         $page->load(['lesson', 'question']);
-
+        // try{
+        //     $page->question->choices = json_decode($page->question->choices);
+        // }catch(Exception $e) {
+        //     $page->question->choices = [];
+        // }
+        dump($page->question->choices);
         if(!$request->isMethod('post')) {
             return view('lesson.page_create', [
                 "page"=>$page
             ]);
         }
 
+        // dump($request->all());
         $thepage = json_decode($request->input('page'));
         if($request->image) {
             $thepage->image = $request->image->store('page_images');
@@ -242,11 +248,28 @@ class LessonController extends Controller
         $page->page = $thepage;
         $page->save();
 
+        $realChoices = [];
+        if($request->input('question_type')!='answer') {
+            $choices = $request->input('choises_answers');
+            foreach($choices as $choice) {
+                $tmp = new \stdClass;
+                $tmp->checked = false;
+                $tmp->answer = $choice;
+                $realChoices[] = $tmp;
+            }
+            $checkedChoices = $request->input('choices');
+            foreach($checkedChoices as $checkedChoice) {
+                $tmp = explode('_', $checkedChoice);
+                $tmp = (int)$tmp[1];
+                $realChoices[$tmp]->checked = true;
+            }
+        }
         if($page->question) {
             $page->question()->update([
                 "question"=>$request->input('question'),
                 "question_type"=>$request->input('question_type'),
                 "answer"=>$request->input('answer'),
+                "choices"=>json_encode($realChoices),
                 "score"=>$request->input('score'),
             ]);
         }else {
@@ -254,6 +277,7 @@ class LessonController extends Controller
             $question->question = $request->input('question');
             $question->question_type = $request->input('question_type');
             $question->answer = $request->input('answer');
+            $question->choices = json_encode($realChoices);
             $question->score = $request->input('score');
             $question->pages_id = $page->id;
             $question->lessons_id = $page->lessons_id;

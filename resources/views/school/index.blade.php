@@ -7,12 +7,12 @@
 
 @section('content')
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper" style="background: url('/admin/dist/img/mashhad.png');">
+  <div class="content-wrapper" style="background: url('/admin/dist/img/vschool_back.jpg');">
       <!-- Content Header (Page header) -->
       <section class="content-header">
           <h1 style="background-color: #ffffff;padding: 10px;">
-            مدیریت انواع مدرک شناسایی
-              <small>Certificate Type</small>
+            مدیریت  مدارس
+            <small>Schools</small>
           </h1>
       </section>
 
@@ -22,30 +22,34 @@
               <div class="col-xs-12">
                   <div class="box">
                       <div class="box-header">
-                          <h3 class="box-title">نوع مدرک</h3>
-                          <a class="btn btn-primary pull-left" href="/statistics_certificate_type/create">ثبت نوع مدرک شناسایی</a>
+                          <h3 class="box-title">مدرسه</h3>
+                          <a class="btn btn-primary pull-left" href="/school/create">ثبت مدرسه</a>
                       </div><!-- /.box-header -->
                       <div class="box-body">
                           <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
                               <thead>
                                 <tr>
-                                    <th>ردیف</th>
-                                    <th>نام</th>
-                                    <th>توضیحات</th>
-                                    <th>#</th>
+                                  <th>ردیف</th>
+                                  <th>نام</th>
+                                  <th>ناحیه</th>
+                                  <th>کد</th>
+                                  <th>مدیر</th>
+                                  <th>#</th>
                                 </tr>
                               </thead>
                               <tbody>
-                              @foreach($protocol_types as $i=>$protocol_type)
+                              @foreach($schools as $i=>$school)
                                 <tr>
                                   <td>{{ $i + 1 }}</td>
-                                  <td>{{ $protocol_type->name }}</td>
-                                  <td>{{ $protocol_type->description }}</td>
+                                  <td>{{ $school->name }}</td>
+                                  <td>{{ ($school->zone)?$school->zone->name . ' - ' . $school->zone->city->name . ' - ' . $school->zone->city->province->name:'' }}</td>
+                                  <td>{{ $school->code }}</td>
+                                  <td>{{ $school->manager_name }}</td>
                                   <td>
-                                    <a class="btn btn-success" href="/statistics_certificate_type/edit/{{ $protocol_type->id }}">
+                                    <a class="btn btn-success" href="/school/edit/{{ $school->id }}">
                                     ویرایش
                                     </a>
-                                    <a class="btn btn-danger btn-delete" href="/statistics_certificate_type/delete/{{ $protocol_type->id }}">
+                                    <a class="btn btn-danger btn-delete" href="/school/delete/{{ $school->id }}">
                                     حذف
                                     </a>
                                   </td>
@@ -54,9 +58,11 @@
                               </tbody>
                               <tfoot>
                                 <tr>
-                                  <th>ردیف</th>
+                                  <th>ردیف</>
                                   <th>نام</th>
-                                  <th>توضیحات</th>
+                                  <th>ناحیه</th>
+                                  <th>کد</th>
+                                  <th>مدیر</th>
                                   <th>#</th>
                                 </tr>
                               </tfoot>

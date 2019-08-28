@@ -145,7 +145,25 @@ $user = Auth::user();
                   @endif
                   >
                     <a href="/course">
-                      <i class="fa fa-chart-line"></i> <span>دوره</span> 
+                      <i class="fa fa-chalkboard"></i> <span>دوره</span> 
+                    </a>
+                  </li>
+                  <li
+                  @if($current_url=='user')
+                   class="active"
+                  @endif
+                  >
+                    <a href="/user">
+                      <i class="fa fa-user-graduate"></i> <span>متخصصین</span> 
+                    </a>
+                  </li>
+                  <li
+                  @if($current_url=='school')
+                   class="active"
+                  @endif
+                  >
+                    <a href="/school">
+                      <i class="fa fa-school"></i> <span>مدارس</span> 
                     </a>
                   </li>
                   @endif
@@ -155,7 +173,7 @@ $user = Auth::user();
                   @endif
                   >
                     <a href="/chapter">
-                      <i class="fa fa-file-signature"></i> <span>فصل</span> 
+                      <i class="fa fa-pencil-alt"></i> <span>فصل</span> 
                     </a>
                   </li>
                   <li

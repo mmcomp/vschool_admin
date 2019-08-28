@@ -1,9 +1,5 @@
 @extends('layouts.admin')
 
-@section('extra_css')
-
-@endsection
-
 @section('content')
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -47,6 +43,14 @@
                                 </div>
 
                                 <div class="form-group" id="notes">
+                                @if($page && $page->page!=null )
+                                @foreach($page->page->notes as $note)
+                                <div class="form-group">
+                                    <label for="name">نکته</label><button class="btn btn-danger pull-left" onclick="removeNote(this);">X</button>
+                                    <textarea class="form-control notes" >{{ $note }}</textarea>
+                                </div>
+                                @endforeach
+                                @endif
                                 </div>
 
                                 <div class="form-group">
@@ -66,21 +70,54 @@
                                         <input type="file" name="image" />
                                     </div>
                                     <div class="form-group">
+                                        <label for="name">در صورتی که سوال از نوع جای خالی باشد در محل های جای خالی در صورت سوال یک کارکتر * بگذارید</label>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="name">سوال صفحه</label>
                                         <textarea class="form-control" id="question" name="question" >{{ ($page && $page->question)?$page->question->question:'' }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="name">نوع سوال</label>
-                                        <select name="question_type"  class="form-control">
+                                        <select name="question_type"  class="form-control" onchange="showAnswer(this);">
                                             <option value="answer"{{ ($page && $page->question && $page->question->question_type=='answer')?' selected':'' }}>متنی</option>
                                             <option value="choice_question"{{ ($page && $page->question && $page->question->question_type=='choice_question')?' selected':'' }}>چندگزینه</option>
                                             <option value="fill_blank"{{ ($page && $page->question && $page->question->question_type=='fill_blank')?' selected':'' }}>جای خالی</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
+                                    @if($page && $page->question && $page->question->question_type=='answer')
+                                    <div class="form-group" id="answer-div">
                                         <label for="name">پاسخ</label>
                                         <input type="text" class="form-control" name="answer" placeholder="پاسخ" value="{{ ($page && $page->question)?$page->question->answer:'' }}">
                                     </div>
+                                    <div class="form-group" id="answers-div" style="display: none;">
+                                        <a class="btn btn-primary" onclick="addAnswer();">
+                                        پاسخ
+                                        </a>                                    
+                                    </div>
+                                    @else
+                                    <div class="form-group" id="answer-div" style="display: none;">
+                                        <label for="name">پاسخ</label>
+                                        <input type="text" class="form-control" name="answer" placeholder="پاسخ" value="{{ ($page && $page->question)?$page->question->answer:'' }}">
+                                    </div>
+                                    <div class="form-group" id="answers-div">
+                                        <a class="btn btn-primary" onclick="addAnswer();">
+                                        پاسخ
+                                        </a> 
+                                        @if($page && $page->question && $page->question->choices)
+                                        @foreach($page->question->choices as $i=>$ans)
+                                        <div class="form-group answers">
+                                            <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this);">X</a>
+                                            <input type="checkbox" class="answers-data-check" name="choices[]" value="choises_{{ $i }}"
+                                            @if($ans->checked)
+                                            checked
+                                            @endif
+                                             />
+                                            <textarea class="form-control answers-data" name="choises_answers[]" >{{ $ans->answer }}</textarea>
+                                        </div>
+                                        @endforeach
+                                        @endif                                
+                                    </div>
+                                    @endif
                                     <div class="form-group">
                                         <label for="name">امتیاز</label>
                                         <input type="number" class="form-control" name="score" placeholder="امتیاز" value="{{ ($page && $page->question)?$page->question->score:'0' }}">
@@ -103,9 +140,12 @@
 
 @section('extra_script')
 <script>
+    function removeNote(dobj) {
+        $(dobj).parent().remove();
+    }
     function addNote() {
         $("#notes").prepend(`<div class="form-group">
-                <label for="name">نکته</label>
+                <label for="name">نکته</label><button class="btn btn-danger pull-left" onclick="removeNote(this);">X</button>
                 <textarea class="form-control notes" ></textarea>
             </div>`);
     }
@@ -122,6 +162,32 @@
         });
         $("#page").val(JSON.stringify(page));
         $("#frm").submit();
+    }
+    function showAnswer(dobj) {
+        var question_type = $(dobj).find('option:selected').val();
+        console.log('Question type', question_type);
+        if(question_type=='answer') {
+            $(".answers").remove();
+            $("#answer-div").show();
+            $("#answers-div").hide();
+        }else {
+            $("#answer-div").hide();
+            $("#answers-div").show();
+        }
+    }
+    function addAnswer() {
+        var i = $(".answers-data-check").length
+        $("#answers-div").append(`<div class="form-group answers">
+                <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this);">X</a>
+                <input type="checkbox" class="answers-data-check" name="choices[]" value="choises_${ i }" />
+                <textarea class="form-control answers-data" name="choises_answers[]" ></textarea>
+            </div>`);
+    }
+    function removeChoice(dobj) {
+        $(dobj).parent().remove();
+        $(".answers-data-check").each(function(id, field) {
+            $(field).val(`choises_${id}`);
+        });
     }
 </script>
 @endsection

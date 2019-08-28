@@ -7,12 +7,13 @@
 
 @section('content')
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper" style="background: url('/admin/dist/img/mashhad.png');">
+  <div class="content-wrapper" style="background: url('/admin/dist/img/vschool_back.jpg');">
       <!-- Content Header (Page header) -->
       <section class="content-header">
           <h1 style="background-color: #ffffff;padding: 10px;">
-            مدیریت انواع قرارداد
-              <small>Protocol Type</small>
+            مدیریت دسترسی 
+            {{ $teacher->fname }} {{ $teacher->lname }}
+            <small>Teacher Courses</small>
           </h1>
       </section>
 
@@ -22,30 +23,25 @@
               <div class="col-xs-12">
                   <div class="box">
                       <div class="box-header">
-                          <h3 class="box-title">نوع قرارداد</h3>
-                          <a class="btn btn-primary pull-left" href="/statistics_protocol_type/create">ثبت نوع قرارداد</a>
+                          <h3 class="box-title">دسترسی</h3>
+                          <a class="btn btn-primary pull-left" href="/user/course_create/{{ $teacher->id }}">ثبت دسترسی</a>
                       </div><!-- /.box-header -->
                       <div class="box-body">
                           <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
                               <thead>
                                 <tr>
-                                    <th>ردیف</th>
-                                    <th>نام</th>
-                                    <th>توضیحات</th>
-                                    <th>#</th>
+                                  <th>ردیف</th>
+                                  <th>دوره</th>
+                                  <th>#</th>
                                 </tr>
                               </thead>
                               <tbody>
-                              @foreach($protocol_types as $i=>$protocol_type)
+                              @foreach($teacher->courses as $i=>$course)
                                 <tr>
                                   <td>{{ $i + 1 }}</td>
-                                  <td>{{ $protocol_type->name }}</td>
-                                  <td>{{ $protocol_type->description }}</td>
+                                  <td>{{ $course->name }}</td>
                                   <td>
-                                    <a class="btn btn-success" href="/statistics_protocol_type/edit/{{ $protocol_type->id }}">
-                                    ویرایش
-                                    </a>
-                                    <a class="btn btn-danger btn-delete" href="/statistics_protocol_type/delete/{{ $protocol_type->id }}">
+                                    <a class="btn btn-danger btn-delete" href="/user/course_delete/{{ $teacher->id }}/{{ $course->id }}">
                                     حذف
                                     </a>
                                   </td>
@@ -55,8 +51,7 @@
                               <tfoot>
                                 <tr>
                                   <th>ردیف</th>
-                                  <th>نام</th>
-                                  <th>توضیحات</th>
+                                  <th>دوره</th>
                                   <th>#</th>
                                 </tr>
                               </tfoot>
