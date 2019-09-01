@@ -47,6 +47,7 @@ $user = Auth::user();
     <link rel="stylesheet" href="/admin/dist/fonts/fonts-fa.css">
     <link rel="stylesheet" href="/admin/dist/css/bootstrap-rtl.min.css">
     <link rel="stylesheet" href="/admin/dist/css/rtl.css">
+    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -268,6 +269,7 @@ $user = Auth::user();
         initialValueType: 'persian',
       });
     </script>
+    <!-- JQMath -->
     @yield('extra_script')
 </body>
 

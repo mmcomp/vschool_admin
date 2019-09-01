@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         // Morilog\Jalali\JalaliServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        // Gregwar\Tex2pngBundle\GregwarTex2pngBundle::class,
     ],
 
     /*
@@ -228,7 +229,7 @@ return [
         // 'jDateTime' => Morilog\Jalali\Facades\jDateTime::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
-        
+        // 'Twig2pngBundle' => Gregwar\Tex2pngBundle\GregwarTex2pngBundle::class,
     ],
 
 ];

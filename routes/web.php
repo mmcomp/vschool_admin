@@ -16,6 +16,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/forcelogout/{id}', 'Controller@forceLogout');
     Route::post('/changepass', 'Controller@changePass');
 
+    Route::any('/test', 'Controller@test');
+
     Route::prefix('/school')->group(function () {
         Route::any('/', 'SchoolController@index');
         Route::get('/delete/{id}', 'SchoolController@delete');

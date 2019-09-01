@@ -1,5 +1,14 @@
 @extends('layouts.admin')
 
+@section('extra_css')
+<link rel="stylesheet" href="/admin/dist/css/mathquill.css">
+<style>
+    span.formulas {
+        direction: ltr;
+    }
+</style>
+@endsection
+
 @section('content')
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -30,7 +39,23 @@
                                     <label for="name">موضوع</label>
                                     <input type="text" class="form-control" id="title" name="title" placeholder="موضوع" value="{{ ($page && $page->page && $page->page->title)?$page->page->title:'' }}">
                                 </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" onclick="addFormula();">
+                                    فرمول
+                                    </button>
+                                </div>
 
+                                <div class="form-group" id="formulas-div">
+                                @if($page && $page->page!=null && isset($page->page->formulas))
+                                @foreach($page->page->formulas as $i => $formula)
+                                <div class="form-group">
+                                    <label for="name">{{ $i+1 }}</label><button class="btn btn-danger pull-left" onclick="removeNote(this);">X</button>
+                                    <textarea class="tex latex form-control">{{ $formula }}</textarea>
+                                    <span class="formulas">{{ $formula }}</span>
+                                </div>
+                                @endforeach
+                                @endif
+                                </div>
                                 <div class="form-group">
                                     <label for="name">متن اول</label>
                                     <textarea class="form-control" id="content1" name="content1" >{{ ($page && $page->page && $page->page->content1)?$page->page->content1:'' }}</textarea>
@@ -87,7 +112,7 @@
                                     @if($page && $page->question && $page->question->question_type=='answer')
                                     <div class="form-group" id="answer-div">
                                         <label for="name">پاسخ</label>
-                                        <input type="text" class="form-control" name="answer" placeholder="پاسخ" value="{{ ($page && $page->question)?$page->question->answer:'' }}">
+                                        <textarea class="form-control" name="answer" >{{ ($page && $page->question)?$page->question->answer:'' }}</textarea>
                                     </div>
                                     <div class="form-group" id="answers-div" style="display: none;">
                                         <a class="btn btn-primary" onclick="addAnswer();">
@@ -97,7 +122,7 @@
                                     @else
                                     <div class="form-group" id="answer-div" style="display: none;">
                                         <label for="name">پاسخ</label>
-                                        <input type="text" class="form-control" name="answer" placeholder="پاسخ" value="{{ ($page && $page->question)?$page->question->answer:'' }}">
+                                        <textarea class="form-control" name="answer" >{{ ($page && $page->question)?$page->question->answer:'' }}</textarea>
                                     </div>
                                     <div class="form-group" id="answers-div">
                                         <a class="btn btn-primary" onclick="addAnswer();">
@@ -139,6 +164,7 @@
 @endsection
 
 @section('extra_script')
+<script src="/admin/dist/js/mathquill.min.js"></script>
 <script>
     function removeNote(dobj) {
         $(dobj).parent().remove();
@@ -155,11 +181,16 @@
             content1: $("#content1").val(),
             content2: $("#content1").val(),
             notes: [],
-            image: ''
+            image: '',
+            formulas: [],
         }
         $(".notes").each(function(id, field) {
             page.notes.push(field.value);
         });
+        $(".tex").each(function(id, field) {
+            page.formulas.push(field.value);
+        });
+        // console.log(page);
         $("#page").val(JSON.stringify(page));
         $("#frm").submit();
     }
@@ -189,5 +220,27 @@
             $(field).val(`choises_${id}`);
         });
     }
+    function addFormula() {
+        var i = $(".tex").length + 1
+        $("#formulas-div").append(`<div class="form-group answers">
+                <label for="name">${ i }</label><button class="btn btn-danger pull-left" onclick="removeNote(this);">X</button>
+                <textarea onblur="renderText();" class="tex latex form-control"></textarea>
+                <span class="formulas"></span>
+            </div>`);
+    }
+    function renderText() {
+        $(".tex").each(function (id, field) {
+            var tex = $(field).val();
+            $(field).parent().find('span').text(tex);
+            MQ.StaticMath($(field).parent().find('span')[0]);
+        });
+    }
+    var MQ = MathQuill.getInterface(2);
+    $(document).ready(function() {
+        $("textarea").blur(function() {
+            renderText();
+        });
+        renderText();
+    });
 </script>
 @endsection
