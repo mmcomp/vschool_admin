@@ -155,8 +155,7 @@ class LessonController extends Controller
             $request->session()->flash('msg_danger', 'درس مورد نظر پیدا نشد');
             return redirect('/lesson');
         }
-        // $user = Auth::user();
-        // $user->load('courses');
+
         $icons = [
             "success"=>"check",
             "danger"=>"ban"
@@ -188,8 +187,6 @@ class LessonController extends Controller
             $request->session()->flash('msg_danger', 'درس مورد نظر پیدا نشد');
             return redirect('/lesson');
         }
-        // $user = Auth::user();
-        // $user->load('courses');
         
         if(!$request->isMethod('post')) {
             return view('lesson.page_create', [
@@ -253,7 +250,6 @@ class LessonController extends Controller
             ]);
         }
 
-        dump($request->all());
         $thepage = json_decode($request->input('page'));
         if($request->image) {
             $thepage->image = $request->image->store('page_images');
@@ -277,9 +273,6 @@ class LessonController extends Controller
                 $realChoices[$tmp]->checked = true;
             }
         }
-
-        $page->load('lesson.chapter');
-        dump($page);
 
         if($page->question) {
             $page->question()->update([

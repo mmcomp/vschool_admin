@@ -33,6 +33,9 @@ Route::middleware('auth')->group(function () {
         Route::any('/course/{id}', 'UserController@course');
         Route::get('/course_delete/{id}/{course_id}', 'UserController@courseDelete');
         Route::any('/course_create/{id}', 'UserController@courseCreate');
+        Route::any('/question/{id}', 'UserController@question');
+        Route::get('/question_delete/{id}/{course_id}', 'UserController@questionDelete');
+        Route::any('/question_create/{id}', 'UserController@questionCreate');
     });
 
     Route::prefix('/course')->group(function () {

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\User;
 use App\Course;
+use App\QuestionAccess;
 
 class UserController extends Controller
 {
@@ -194,5 +195,93 @@ class UserController extends Controller
         
         $request->session()->flash('msg_success', 'دسترسی به دوره مورد نظر با موفقیت حذف شد');
         return redirect('/user/course/' . $id);
+    }
+
+    public function question(Request $request, $id) {
+        $user = Auth::user();
+        if($user->group_id!=0) {
+            return redirect('/');
+        }
+        $user = User::find($id);
+        if(!$user) {
+            $request->session()->flash('msg_danger', 'متخصص مورد نظر پیدا نشد');
+            return redirect('/user');
+        }
+        $user->load(['questions.course']);
+        $icons = [
+            "success"=>"check",
+            "danger"=>"ban"
+        ];
+        $msgs = [];
+        $sessions = $request->session()->all();
+        foreach($sessions as $key=>$value) {
+            if(strpos($key, 'msg_')!==false && isset($icons[str_replace('msg_', '', $key)])) {
+                $msgs[] = [
+                    "msg"=>$value,
+                    "type"=>str_replace('msg_', '', $key),
+                    "icon"=>$icons[str_replace('msg_', '', $key)],
+                ];
+            }
+        }
+        
+        return view('user.question', [
+            "msgs"=>$msgs,
+            "teacher"=>$user,
+        ]);
+    }
+
+    public function questionCreate(Request $request, $id) {
+        $user = User::find($id);
+        if(!$user) {
+            $request->session()->flash('msg_danger', 'متخصص مورد نظر پیدا نشد');
+            return redirect('/user');
+        }
+        $user->load(['questions']);
+        $courseIds = [];
+        foreach($user->questions as $course) {
+            $courseIds[] = $course->courses_id;
+        }
+        $courses = Course::whereNotIn('id', $courseIds)->get();
+        if(count($courses)==0) {
+            $request->session()->flash('msg_danger', 'دوره ای برای دسترسی پیدا نشد');
+            return redirect('/user/question/' . $id);
+        }
+        if(!$request->isMethod('post')) {
+            return view('user.question_create', [
+                "courses"=>$courses
+            ]);
+        }
+        $course = Course::find($request->input('courses_id'));
+        if(!$course) {
+            $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
+            return redirect('/user/question/' . $id);
+        }
+        $questionAccess = QuestionAccess::where('courses_id', $course->id)->where('users_id', $id)->first();
+        if(!$questionAccess) {
+            $questionAccess = new QuestionAccess;
+            $questionAccess->courses_id = $course->id;
+            $questionAccess->users_id = $id;
+            $questionAccess->save();
+        }
+
+        $request->session()->flash('msg_success', 'دسترسی مورد نظر با موفقیت ثبت شد');
+        return redirect('/user/question/' . $id);
+    }
+
+    public function questionDelete(Request $request, $id, $course_id) {
+        $course = Course::find($course_id);
+        if(!$course) {
+            $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
+            return redirect('/user/question/' . $id);
+        }
+        $questionAccess = QuestionAccess::where('courses_id', $course->id)->where('users_id', $id)->first();
+        if(!$questionAccess) {
+            $request->session()->flash('msg_danger', 'دسترسی مورد نظر پیدا نشد');
+            return redirect('/user/question/' . $id);
+        }
+        $questionAccess->delete();
+        
+        $request->session()->flash('msg_success', 'دسترسی به طرح سوال برای دوره مورد نظر با موفقیت حذف شد');
+        return redirect('/user/question/' . $id);
     }
 }

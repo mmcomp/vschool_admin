@@ -106,8 +106,12 @@ class CourseController extends Controller
             }
         }
         if($user->group_id!=0) {
-            $user->load('courses');
-            $courses = $user->courses;
+            $user->load('questions');
+            $ids = [];
+            foreach($user->questions as $question_access) {
+                $ids[] = $question_access->courses_id;
+            }
+            $courses = Course::whereIn('id', $ids)->get();
         }else {
             $courses = Course::all();
         }        

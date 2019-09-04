@@ -11,8 +11,9 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
           <h1 style="background-color: #ffffff;padding: 10px;">
-            مدیریت متخصصین
-            <small>Teachers</small>
+            مدیریت دسترسی طرح سوال
+            {{ $teacher->fname }} {{ $teacher->lname }}
+            <small>Teacher Course Questions</small>
           </h1>
       </section>
 
@@ -22,38 +23,25 @@
               <div class="col-xs-12">
                   <div class="box">
                       <div class="box-header">
-                          <h3 class="box-title">متخصص</h3>
-                          <a class="btn btn-primary pull-left" href="/user/create">ثبت متخصص</a>
+                          <h3 class="box-title">دسترسی</h3>
+                          <a class="btn btn-primary pull-left" href="/user/question_create/{{ $teacher->id }}">ثبت دسترسی</a>
                       </div><!-- /.box-header -->
                       <div class="box-body">
                           <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
                               <thead>
                                 <tr>
                                   <th>ردیف</th>
-                                  <th>نام</th>
-                                  <th>نام خانوادگی</th>
-                                  <th>ایمیل</th>
+                                  <th>دوره</th>
                                   <th>#</th>
                                 </tr>
                               </thead>
                               <tbody>
-                              @foreach($teachers as $i=>$teacher)
+                              @foreach($teacher->questions as $i=>$course)
                                 <tr>
                                   <td>{{ $i + 1 }}</td>
-                                  <td>{{ $teacher->fname }}</td>
-                                  <td>{{ $teacher->lname }}</td>
-                                  <td>{{ $teacher->email }}</td>
+                                  <td>{{ $course->course->name }}</td>
                                   <td>
-                                    <a class="btn btn-primary" href="/user/question/{{ $teacher->id }}">
-                                    سوال
-                                    </a>
-                                    <a class="btn btn-primary" href="/user/course/{{ $teacher->id }}">
-                                    دسترسی
-                                    </a>
-                                    <a class="btn btn-success" href="/user/edit/{{ $teacher->id }}">
-                                    ویرایش
-                                    </a>
-                                    <a class="btn btn-danger btn-delete" href="/user/delete/{{ $teacher->id }}">
+                                    <a class="btn btn-danger btn-delete" href="/user/question_delete/{{ $teacher->id }}/{{ $course->course->id }}">
                                     حذف
                                     </a>
                                   </td>
@@ -63,9 +51,7 @@
                               <tfoot>
                                 <tr>
                                   <th>ردیف</th>
-                                  <th>نام</th>
-                                  <th>نام خانوادگی</th>
-                                  <th>ایمیل</th>
+                                  <th>دوره</th>
                                   <th>#</th>
                                 </tr>
                               </tfoot>
