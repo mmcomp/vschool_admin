@@ -186,6 +186,15 @@ $user = Auth::user();
                       <i class="fa fa-file-signature"></i> <span>درس</span> 
                     </a>
                   </li>
+                  <li
+                  @if($current_url=='course_select')
+                   class="active"
+                  @endif
+                  >
+                    <a href="/course_select">
+                      <i class="fa fa-chalkboard"></i> <span>طرح سوال</span> 
+                    </a>
+                  </li>
                 </ul>
             </section>
             <!-- /.sidebar -->

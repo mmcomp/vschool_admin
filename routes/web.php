@@ -41,7 +41,18 @@ Route::middleware('auth')->group(function () {
         Route::any('/create', 'CourseController@create');
         Route::any('/edit/{id}', 'CourseController@edit');
     });
+
+    Route::prefix('/course_select')->group(function () {
+        Route::any('/', 'CourseController@indexSelect');
+    });
     
+    Route::prefix('/question')->group(function () {
+        Route::any('/{id}', 'QuestionController@theIndex');
+        Route::get('/delete/{id}', 'QuestionController@delete');
+        Route::any('/create/{id}', 'QuestionController@create');
+        Route::any('/edit/{id}', 'QuestionController@edit');
+    });
+
     Route::prefix('/lesson')->group(function () {
         Route::any('/', 'LessonController@index');
         Route::get('/delete/{id}', 'LessonController@delete');

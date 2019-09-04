@@ -9,6 +9,7 @@ class Question extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'choices'=>'object'
+        'choices'=>'object',
+        'formulas'=>'array'
     ];
 }

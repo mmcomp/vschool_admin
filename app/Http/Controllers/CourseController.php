@@ -87,4 +87,33 @@ class CourseController extends Controller
         $request->session()->flash('msg_success', 'کرس مورد نظر با موفقیت حذف شد');
         return redirect('/course');
     }
+
+    public function indexSelect(Request $request) {
+        $user = Auth::user();
+        $icons = [
+            "success"=>"check",
+            "danger"=>"ban"
+        ];
+        $msgs = [];
+        $sessions = $request->session()->all();
+        foreach($sessions as $key=>$value) {
+            if(strpos($key, 'msg_')!==false && isset($icons[str_replace('msg_', '', $key)])) {
+                $msgs[] = [
+                    "msg"=>$value,
+                    "type"=>str_replace('msg_', '', $key),
+                    "icon"=>$icons[str_replace('msg_', '', $key)],
+                ];
+            }
+        }
+        if($user->group_id!=0) {
+            $user->load('courses');
+            $courses = $user->courses;
+        }else {
+            $courses = Course::all();
+        }        
+        return view('course_select.index', [
+            "msgs"=>$msgs,
+            "courses"=>$courses,
+        ]);
+    }
 }

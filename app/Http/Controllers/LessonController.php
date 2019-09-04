@@ -223,14 +223,17 @@ class LessonController extends Controller
                 $realChoices[$tmp]->checked = true;
             }
         }
+        $page->load('lesson.chapter');
         $question->question = $request->input('question');
         $question->question_type = $request->input('question_type');
         $question->answer = $request->input('answer');
-        $question->choices = json_encode($realChoices);
+        $question->choices = $realChoices;
         $question->score = $request->input('score');
         $question->pages_id = $page->id;
         $question->lessons_id = $page->lessons_id;
+        $question->courses_id = $page->lesson->chapter->courses_id;
         $question->save();
+
 
         $request->session()->flash('msg_success', 'صفحه مورد نظر با موفقیت ثبت شد');
         return redirect('/lesson/page/' . $id);
@@ -274,25 +277,32 @@ class LessonController extends Controller
                 $realChoices[$tmp]->checked = true;
             }
         }
+
+        $page->load('lesson.chapter');
+        dump($page);
+
         if($page->question) {
             $page->question()->update([
                 "question"=>$request->input('question'),
                 "question_type"=>$request->input('question_type'),
                 "answer"=>$request->input('answer'),
-                "choices"=>json_encode($realChoices),
+                "choices"=>$realChoices,
                 "score"=>$request->input('score'),
+                "courses_id"=>$page->lesson->chapter->courses_id
             ]);
         }else {
             $question = new Question;
             $question->question = $request->input('question');
             $question->question_type = $request->input('question_type');
             $question->answer = $request->input('answer');
-            $question->choices = json_encode($realChoices);
+            $question->choices = $realChoices;
             $question->score = $request->input('score');
             $question->pages_id = $page->id;
             $question->lessons_id = $page->lessons_id;
+            $question->courses_id = $page->lesson->chapter->courses_id;
             $question->save();
         }
+
 
         $request->session()->flash('msg_success', 'صفحه مورد نظر با موفقیت بروز شد');
         return redirect('/lesson/page/' . $page->lessons_id);
