@@ -10,12 +10,12 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
           <h1>
-            @if($course->id)
+            @if($level->id)
             ویرایش 
             @else
             ثبت
             @endif
-            دوره
+            لول
           </h1>
       </section>
 
@@ -25,7 +25,7 @@
               <div class="col-xs-12">
                   <div class="box">
                       <div class="box-header">
-                          <h3 class="box-title">دوره</h3>
+                          <h3 class="box-title">لول</h3>
                       </div><!-- /.box-header -->
                       <div class="box-body">
                         <form method="post" enctype="multipart/form-data">
@@ -34,19 +34,18 @@
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <label for="name">نام</label>
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="نام" value="{{ ($course && $course->name)?$course->name:'' }}">
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="نام" value="{{ ($level && $level->name)?$level->name:'' }}">
                                     </div> 
-
                                     <div class="form-group">
-                                        <label for="name">زمان در دوئل</label>
-                                        <input type="text" class="form-control" id="duel_time" name="duel_time" placeholder="زمان" value="{{ ($course && $course->duel_time)?$course->duel_time:'' }}">
+                                        <label for="name">حدپایین</label>
+                                        <input type="text" class="form-control" id="min_score" name="min_score" placeholder="حدپایین" value="{{ ($level && $level->id)?(int)$level->min_score:'' }}">
                                     </div> 
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <label for="name">توضحیات</label>
-                                        <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات" value="{{ ($course && $course->description)?$course->description:'' }}">
-                                    </div>                             
+                                        <label for="name">حدبالا</label>
+                                        <input type="text" class="form-control" id="max_score" name="max_score" placeholder="حدبالا" value="{{ ($level && $level->id)?(int)$level->max_score:'' }}">
+                                    </div>               
                                 </div>
                                 <div class="col-xs-12">
                                     <button class="btn btn-primary pull-left">

@@ -167,6 +167,15 @@ $user = Auth::user();
                       <i class="fa fa-school"></i> <span>مدارس</span> 
                     </a>
                   </li>
+                  <li
+                  @if($current_url=='level')
+                   class="active"
+                  @endif
+                  >
+                    <a href="/level">
+                      <i class="fa fa-cubes"></i> <span>لول</span> 
+                    </a>
+                  </li>
                   @endif
                   <li
                   @if($current_url=='' || $current_url=='home' || $current_url=='chapter')
@@ -192,7 +201,7 @@ $user = Auth::user();
                   @endif
                   >
                     <a href="/course_select">
-                      <i class="fa fa-chalkboard"></i> <span>طرح سوال</span> 
+                      <i class="fa fa-book"></i> <span>طرح سوال</span> 
                     </a>
                   </li>
                 </ul>

@@ -46,6 +46,7 @@ class CourseController extends Controller
         }
 
         $course->name = $request->input('name');
+        $course->duel_time = ((int)$request->input('duel_time')<=0)?100:(int)$request->input('duel_time');
         $course->description = $request->input('description');
         $course->save();
         
@@ -67,6 +68,7 @@ class CourseController extends Controller
         }
 
         $course->name = $request->input('name');
+        $course->duel_time = ((int)$request->input('duel_time')<=0)?100:(int)$request->input('duel_time');
         $course->description = $request->input('description');
         $course->save();
         
