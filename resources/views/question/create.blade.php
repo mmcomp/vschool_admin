@@ -6,6 +6,9 @@
     span.formulas {
         direction: ltr;
     }
+    textarea.tex {
+        direction: ltr;
+    }
 </style>
 @endsection
 
@@ -22,6 +25,10 @@
             @endif
             سوال
           </h1>
+
+          <a class="pull-left" target="_blank" href="https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols">
+            راهنمای فرمول نویسی
+          </a><br/>
       </section>
 
       <!-- Main content -->
@@ -80,7 +87,7 @@
                                         </a>                                    
                                     </div>
                                     @else
-                                    <div class="form-group" id="answer-div" style="display: none;">
+                                    <div class="form-group" id="answer-div">
                                         <label for="name">پاسخ</label>
                                         <textarea class="form-control" name="answer" >{{ ($question)?$question->answer:'' }}</textarea>
                                     </div>
