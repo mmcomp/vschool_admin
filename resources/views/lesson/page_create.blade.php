@@ -120,7 +120,7 @@
                                         </a>                                    
                                     </div>
                                     @else
-                                    <div class="form-group" id="answer-div" style="display: none;">
+                                    <div class="form-group" id="answer-div">
                                         <label for="name">پاسخ</label>
                                         <textarea class="form-control" name="answer" >{{ ($page && $page->question)?$page->question->answer:'' }}</textarea>
                                     </div>

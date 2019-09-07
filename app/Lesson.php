@@ -13,6 +13,6 @@ class Lesson extends Model
     }
 
     public function pages() {
-        return $this->hasMany('App\Page', 'lessons_id', 'id');
+        return $this->hasMany('App\Page', 'lessons_id', 'id')->orderBy('page_order');
     }
 }

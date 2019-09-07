@@ -2,7 +2,23 @@
 
 @section('extra_css')
 <!-- DataTables -->
-<link rel="stylesheet" href="/admin/plugins/datatables/dataTables.bootstrap.css">
+<!-- <link rel="stylesheet" href="/admin/plugins/datatables/dataTables.bootstrap.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/r-2.2.2/rr-1.2.4/datatables.min.css"/>
+<style>
+  .splash {
+    background-color: rgba(245, 230, 244, 0.38);
+    position: fixed;
+    height: 100%;
+    top: 0;
+    z-index: 99999;
+    width: 100%;
+    color: #000000;
+    display: none;
+  }
+  .lesson-index {
+    cursor: crosshair;
+  }
+</style>
 @endsection
 
 @section('content')
@@ -29,7 +45,7 @@
                               فصل : 
                             </label>
                             <form id="chapter-selection" method="get" >
-                            <select style="width: 400px;" onchange="selectChapter(this);" name="chapters_id">
+                            <select style="width: 400px;" onchange="selectChapter(this);" name="chapters_id" id="chapters_id">
                               <option value="">همه</option>
                               @foreach($allChapters as $chapter)
                               @if($chapter->id==$chapters_id)
@@ -56,7 +72,11 @@
                               <tbody>
                               @foreach($lessons as $i=>$lesson)
                                 <tr>
+                                  @if($chapters_id!='')
+                                  <td class="lesson-index" id="{{ $i + 1 }}">درس {{ $i + 1 }}</td>
+                                  @else
                                   <td>{{ $i + 1 }}</td>
+                                  @endif
                                   <td>{{ $lesson->name }}</td>
                                   <td>{{ $lesson->chapter->course->name }}</td>
                                   <td>{{ $lesson->chapter->name }}</td>
@@ -93,6 +113,9 @@
           </div><!-- /.row -->
       </section><!-- /.content -->
   </div><!-- /.content-wrapper -->
+  <div class="splash">
+    <img src="/admin/dist/img/loading.gif" />
+  </div>
 @endsection
 
 @section('alerts')
@@ -109,8 +132,10 @@
 
 @section('extra_script')
 <!-- DataTables -->
-<script src="/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+<!-- <script src="/admin/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/admin/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="/admin/plugins/datatables/dataTables.rowReorder.js"></script> -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/r-2.2.2/rr-1.2.4/datatables.min.js"></script>
 <script>
   function selectChapter(dobj) {
     $("#chapter-selection").submit();
@@ -121,7 +146,32 @@
       "searching": false,
       "ordering": true,
       "info": true,
-      "autoWidth": false
+      "autoWidth": false,
+      @if($chapters_id!='')
+      "rowReorder": true,
+      @endif
+  });
+  $('#example2').on('row-reordered.dt', function(e) {
+    $(".splash").show();
+    var sending = false;
+    $(".lesson-index").each(function(id, field) {
+      var id = $(field).prop('id');
+      var data = parseInt($(field).text().split(' ')[1], 10);
+      if(id!=data && !sending) {
+        sending = true;
+        var query = `sw1=${id}&sw2=${data}`;
+        var chapters_id = $("#chapters_id").val();
+        if(chapters_id!='') {
+          query += `&chapters_id=${chapters_id}`;
+        }
+        $.get(`/lesson?${query}`, function(result) {
+          window.location.reload();
+        }).fail(function() {
+          alert('خطا در برقراری ارتباط');
+          $(".splash").hide();
+        });
+      }
+    });
   });
   $(".btn-delete").click(function(event) {
     if(!confirm('آیا حذف انجام شود؟')){

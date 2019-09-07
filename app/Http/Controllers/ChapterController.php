@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Chapter;
 use App\Course;
@@ -28,11 +29,29 @@ class ChapterController extends Controller
                 ];
             }
         }
+        if($request->input('sw1')) {
+            $order1 = (int)$request->input('sw1');
+            $order2 = (int)$request->input('sw2');
+            $courses_id = $request->input('courses_id');
+            $chapter1 = Chapter::where('courses_id', $courses_id)->where('chapter_order', $order1-1)->first();
+            $chapter2 = Chapter::where('courses_id', $courses_id)->where('chapter_order', $order2-1)->first();
+            if(!$chapter1 || !$chapter2) {
+                return ["status"=>0];
+            }
+
+            $chapter1->chapter_order = $order2-1;
+            $chapter1->save();
+
+            $chapter2->chapter_order = $order1-1;
+            $chapter2->save();
+
+            return ["status"=>1];
+        }
         $changeCourse = ($request->input('courses_id')!=null);
         $courses_id = '';
         if($changeCourse) {
             $courses_id = $request->input('courses_id');
-            $chapters = Chapter::where('courses_id', $request->input('courses_id'))->with('course')->get();
+            $chapters = Chapter::where('courses_id', $request->input('courses_id'))->with('course')->orderBy('courses_id')->orderBy('chapter_order')->get();
             if($user->group_id==0) {
                 $allCourses = Course::all();
             }else {
@@ -44,14 +63,14 @@ class ChapterController extends Controller
             }
         }else {
             if($user->group_id==0) {
-                $chapters = Chapter::where('id', '!=', 0)->with('course')->get();
+                $chapters = Chapter::where('id', '!=', 0)->with('course')->orderBy('courses_id')->orderBy('chapter_order')->get();
                 $allCourses = Course::all();
             }else {
                 $courses = [];
                 foreach($user->courses as $course) {
                     $courses[] = $course->id;
                 }
-                $chapters = Chapter::whereIn('courses_id', $courses)->with('course')->get();
+                $chapters = Chapter::whereIn('courses_id', $courses)->with('course')->orderBy('courses_id')->orderBy('chapter_order')->get();
                 $allCourses = Course::whereIn('id', $courses)->get();
             }
         }
@@ -85,13 +104,21 @@ class ChapterController extends Controller
             ]);
         }
 
+        $chapter_order = DB::table('chapters')->where('courses_id', $request->input('courses_id'))->max('chapter_order');
+        if($chapter_order) {
+            $chapter_order++;
+        }else {
+            $chapter_order = 0;
+        }
+
         $chapter->name = $request->input('name');
         $chapter->description = $request->input('description');
         $chapter->courses_id = $request->input('courses_id');
+        $chapter->chapter_order = $chapter_order;
         $chapter->save();
-        
-        $request->session()->flash('msg_success', 'چپتر مورد نظر با موفقیت ثبت شد');
-        return redirect('/chapter');
+
+        $request->session()->flash('msg_success', 'فصل مورد نظر با موفقیت ثبت شد');
+        return redirect('/chapter?courses_id=' . $request->input('courses_id'));
     }
 
     public function edit(Request $request, $id) {
@@ -99,7 +126,7 @@ class ChapterController extends Controller
         $user->load('courses');
         $chapter = Chapter::find($id);
         if(!$chapter) {
-            $request->session()->flash('msg_danger', 'چپتر مورد نظر پیدا نشد');
+            $request->session()->flash('msg_danger', 'فصل مورد نظر پیدا نشد');
             return redirect('/chapter');
         }
 
@@ -124,21 +151,21 @@ class ChapterController extends Controller
         $chapter->courses_id = $request->input('courses_id');
         $chapter->save();
         
-        $request->session()->flash('msg_success', 'چپتر مورد نظر با موفقیت بروز شد');
-        return redirect('/chapter');
+        $request->session()->flash('msg_success', 'فصل مورد نظر با موفقیت بروز شد');
+        return redirect('/chapter?courses_id=' . $request->input('courses_id'));
     }
 
 
     public function delete(Request $request, $id) {
         $chapter = Chapter::find($id);
         if(!$chapter) {
-            $request->session()->flash('msg_danger', 'چپتر مورد نظر پیدا نشد');
+            $request->session()->flash('msg_danger', 'فصل مورد نظر پیدا نشد');
             return redirect('/chapter');
         }
 
         $chapter->delete();
         
-        $request->session()->flash('msg_success', 'چپتر مورد نظر با موفقیت حذف شد');
+        $request->session()->flash('msg_success', 'فصل مورد نظر با موفقیت حذف شد');
         return redirect('/chapter');
     }
 }

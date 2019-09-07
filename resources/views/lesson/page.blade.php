@@ -2,7 +2,23 @@
 
 @section('extra_css')
 <!-- DataTables -->
-<link rel="stylesheet" href="/admin/plugins/datatables/dataTables.bootstrap.css">
+<!-- <link rel="stylesheet" href="/admin/plugins/datatables/dataTables.bootstrap.css"> -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/r-2.2.2/rr-1.2.4/datatables.min.css"/>
+<style>
+  .splash {
+    background-color: rgba(245, 230, 244, 0.38);
+    position: fixed;
+    height: 100%;
+    top: 0;
+    z-index: 99999;
+    width: 100%;
+    color: #000000;
+    display: none;
+  }
+  .page-index {
+    cursor: crosshair;
+  }
+</style>
 @endsection
 
 @section('content')
@@ -37,7 +53,7 @@
                               <tbody>
                               @foreach($lesson->pages as $i=>$page)
                                 <tr>
-                                  <td>{{ $i + 1 }}</td>
+                                  <td class="page-index" id="{{ $i + 1 }}">صفحه {{ $i + 1 }}</td>
                                   <td>{{ (isset($page->page->title))?$page->page->title:'' }}</td>
                                   <td>
                                     <a class="btn btn-success" href="/lesson/page_edit/{{ $page->id }}">
@@ -64,6 +80,9 @@
           </div><!-- /.row -->
       </section><!-- /.content -->
   </div><!-- /.content-wrapper -->
+  <div class="splash">
+    <img src="/admin/dist/img/loading.gif" />
+  </div>
 @endsection
 
 @section('alerts')
@@ -80,8 +99,10 @@
 
 @section('extra_script')
 <!-- DataTables -->
-<script src="/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+<!-- <script src="/admin/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/admin/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="/admin/plugins/datatables/dataTables.rowReorder.js"></script> -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/r-2.2.2/rr-1.2.4/datatables.min.js"></script>
 <script>
   function selectChapter(dobj) {
     $("#chapter-selection").submit();
@@ -92,7 +113,26 @@
       "searching": false,
       "ordering": true,
       "info": true,
-      "autoWidth": false
+      "autoWidth": false,
+      "rowReorder": true,
+  });
+  $('#example2').on('row-reordered.dt', function(e) {
+    $(".splash").show();
+    var sending = false;
+    $(".page-index").each(function(id, field) {
+      var id = $(field).prop('id');
+      var data = parseInt($(field).text().split(' ')[1], 10);
+      if(id!=data && !sending) {
+        sending = true;
+        var query = `sw1=${id}&sw2=${data}`;
+        $.get(`/lesson/page/{{ $lesson->id }}?${query}`, function(result) {
+          window.location.reload();
+        }).fail(function() {
+          alert('خطا در برقراری ارتباط');
+          $(".splash").hide();
+        });
+      }
+    });
   });
   $(".btn-delete").click(function(event) {
     if(!confirm('آیا حذف انجام شود؟')){

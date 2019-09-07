@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Chapter;
 use App\Course;
@@ -31,11 +32,29 @@ class LessonController extends Controller
                 ];
             }
         }
+        if($request->input('sw1')) {
+            $order1 = (int)$request->input('sw1');
+            $order2 = (int)$request->input('sw2');
+            $chapters_id = $request->input('chapters_id');
+            $lesson1 = Lesson::where('chapters_id', $chapters_id)->where('lesson_order', $order1-1)->first();
+            $lesson2 = Lesson::where('chapters_id', $chapters_id)->where('lesson_order', $order2-1)->first();
+            if(!$lesson1 || !$lesson2) {
+                return ["status"=>0];
+            }
+
+            $lesson1->lesson_order = $order2-1;
+            $lesson1->save();
+
+            $lesson2->lesson_order = $order1-1;
+            $lesson2->save();
+
+            return ["status"=>1];
+        }
         $changeChapter = ($request->input('chapters_id')!=null);
         $chapters_id = '';
         if($changeChapter) {
             $chapters_id = $request->input('chapters_id');
-            $lessons = Lesson::where('chapters_id', $chapters_id)->with(['chapter', 'chapter.course', 'pages'])->get();
+            $lessons = Lesson::where('chapters_id', $chapters_id)->with(['chapter', 'chapter.course', 'pages'])->orderBy('chapters_id')->orderBy('lesson_order')->get();
             if($user->group_id==0) {
                 $allChapters = Chapter::all();
             }else {
@@ -47,7 +66,7 @@ class LessonController extends Controller
             }
         }else {
             if($user->group_id==0) {
-                $lessons = Lesson::where('id', '!=', 0)->with(['chapter', 'chapter.course'])->get();
+                $lessons = Lesson::where('id', '!=', 0)->with(['chapter', 'chapter.course'])->orderBy('chapters_id')->orderBy('lesson_order')->get();
                 $allChapters = Chapter::all();
             }else {
                 $courses = [];
@@ -59,7 +78,7 @@ class LessonController extends Controller
                 foreach($allChapters as $chapter) {
                     $chapters[] = $chapter->id;
                 }
-                $lessons = Lesson::whereIn('chapters_id', $chapters)->with(['chapter', 'chapter.course'])->get();
+                $lessons = Lesson::whereIn('chapters_id', $chapters)->with(['chapter', 'chapter.course'])->orderBy('chapters_id')->orderBy('lesson_order')->get();
             }
         }
 
@@ -92,13 +111,21 @@ class LessonController extends Controller
             ]);
         }
 
+        $lesson_order = DB::table('lessons')->where('chapters_id', $request->input('chapters_id'))->max('lesson_order');
+        if($lesson_order) {
+            $lesson_order++;
+        }else {
+            $lesson_order = 0;
+        }
+
         $lesson->name = $request->input('name');
         $lesson->description = $request->input('description');
         $lesson->chapters_id = $request->input('chapters_id');
+        $lesson->lesson_order = $lesson_order;
         $lesson->save();
         
         $request->session()->flash('msg_success', 'درس مورد نظر با موفقیت ثبت شد');
-        return redirect('/lesson');
+        return redirect('/lesson?chapters_id=' . $request->input('chapters_id'));
     }
 
     public function edit(Request $request, $id) {
@@ -132,7 +159,7 @@ class LessonController extends Controller
         $lesson->save();
         
         $request->session()->flash('msg_success', 'درس مورد نظر با موفقیت بروزسانی شد');
-        return redirect('/lesson');
+        return redirect('/lesson?chapters_id=' . $request->input('chapters_id'));
 
     }
 
@@ -171,7 +198,24 @@ class LessonController extends Controller
                 ];
             }
         }
+        if($request->input('sw1')) {
+            $order1 = (int)$request->input('sw1');
+            $order2 = (int)$request->input('sw2');
+            $lessons_id = $id;
+            $page1 = Page::where('lessons_id', $lessons_id)->where('page_order', $order1-1)->first();
+            $page2 = Page::where('lessons_id', $lessons_id)->where('page_order', $order2-1)->first();
+            if(!$page1 || !$page2) {
+                return ["status"=>0];
+            }
 
+            $page1->page_order = $order2-1;
+            $page1->save();
+
+            $page2->page_order = $order1-1;
+            $page2->save();
+
+            return ["status"=>1];
+        }
         $lesson->load(['pages', 'chapter', 'chapter.course']);
 
         return view('lesson.page', [
@@ -195,12 +239,20 @@ class LessonController extends Controller
             ]);
         }
 
+        $page_order = DB::table('pages')->where('lessons_id', $id)->max('page_order');
+        if($page_order) {
+            $page_order++;
+        }else {
+            $page_order = 0;
+        }
+
         $page->lessons_id = $id;
         $thepage = json_decode($request->input('page'));
         if($request->image) {
             $thepage->image = $request->image->store('page_images');
         }
         $page->page = $thepage;
+        $page->page_order = $page_order;
         $page->save();
 
         $question = new Question;
