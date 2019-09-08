@@ -83,9 +83,12 @@
                                     <textarea class="form-control" id="content2" name="content2" >{{ ($page && $page->page && $page->page->content2)?$page->page->content2:'' }}</textarea>
                                 </div>
                                 @if($page && $page->page && $page->page->image)
+                                @foreach($page->page->image as $i=>$image)
                                 <div class="form-group">
-                                    <img src="/{{ $page->page->image }}" />
+                                    <label>{{ $i+1 }}</label>
+                                    <img src="/{{ $image }}" />
                                 </div>
+                                @endforeach
                                 @endif
                                 <form method="post" id="frm" enctype="multipart/form-data">
                                     @csrf
@@ -181,7 +184,7 @@
             content1: $("#content1").val(),
             content2: $("#content1").val(),
             notes: [],
-            image: '',
+            image: [],
             formulas: [],
         }
         $(".notes").each(function(id, field) {

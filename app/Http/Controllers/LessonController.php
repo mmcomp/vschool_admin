@@ -249,7 +249,7 @@ class LessonController extends Controller
         $page->lessons_id = $id;
         $thepage = json_decode($request->input('page'));
         if($request->image) {
-            $thepage->image = $request->image->store('page_images');
+            $thepage->image = [$request->image->store('page_images')];
         }
         $page->page = $thepage;
         $page->page_order = $page_order;
@@ -303,8 +303,9 @@ class LessonController extends Controller
         }
 
         $thepage = json_decode($request->input('page'));
+        $thepage->image = $page->page->image;
         if($request->image) {
-            $thepage->image = $request->image->store('page_images');
+            $thepage->image[] = $request->image->store('page_images');
         }
         $page->page = $thepage;
         $page->save();
@@ -331,7 +332,7 @@ class LessonController extends Controller
                 "question"=>$request->input('question'),
                 "question_type"=>$request->input('question_type'),
                 "answer"=>$request->input('answer'),
-                "choices"=>$realChoices,
+                "choices"=>\json_encode($realChoices),
                 "score"=>$request->input('score'),
                 "courses_id"=>$page->lesson->chapter->courses_id
             ]);
