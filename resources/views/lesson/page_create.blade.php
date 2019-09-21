@@ -106,7 +106,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="name">نوع سوال</label>
-                                        <select name="question_type"  class="form-control" onchange="showAnswer(this);">
+                                        <select id="question_type" name="question_type"  class="form-control" onchange="showAnswer(this);">
                                             <option value="answer"{{ ($page && $page->question && $page->question->question_type=='answer')?' selected':'' }}>متنی</option>
                                             <option value="choice_question"{{ ($page && $page->question && $page->question->question_type=='choice_question')?' selected':'' }}>چندگزینه</option>
                                             <option value="fill_blank"{{ ($page && $page->question && $page->question->question_type=='fill_blank')?' selected':'' }}>جای خالی</option>
@@ -135,11 +135,13 @@
                                         @foreach($page->question->choices as $i=>$ans)
                                         <div class="form-group answers">
                                             <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this);">X</a>
+                                            @if($page->question->question_type!='fill_blank')
                                             <input type="checkbox" class="answers-data-check" name="choices[]" value="choises_{{ $i }}"
                                             @if($ans->checked)
                                             checked
                                             @endif
                                              />
+                                            @endif
                                             <textarea class="form-control answers-data" name="choises_answers[]" >{{ $ans->answer }}</textarea>
                                         </div>
                                         @endforeach
@@ -211,11 +213,18 @@
     }
     function addAnswer() {
         var i = $(".answers-data-check").length
-        $("#answers-div").append(`<div class="form-group answers">
-                <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this);">X</a>
-                <input type="checkbox" class="answers-data-check" name="choices[]" value="choises_${ i }" />
-                <textarea class="form-control answers-data" name="choises_answers[]" ></textarea>
-            </div>`);
+        if($("#question_type").val()=='fill_blank') {
+            $("#answers-div").append(`<div class="form-group answers">
+                    <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this);">X</a>
+                    <textarea class="form-control answers-data" name="choises_answers[]" ></textarea>
+                </div>`);
+        }else {
+            $("#answers-div").append(`<div class="form-group answers">
+                    <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this);">X</a>
+                    <input type="checkbox" class="answers-data-check" name="choices[]" value="choises_${ i }" />
+                    <textarea class="form-control answers-data" name="choises_answers[]" ></textarea>
+                </div>`);
+        }
     }
     function removeChoice(dobj) {
         $(dobj).parent().remove();
