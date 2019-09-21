@@ -98,7 +98,7 @@
                                         <input type="file" name="image" />
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">در صورتی که سوال از نوع جای خالی باشد در محل های جای خالی در صورت سوال یک کارکتر * بگذارید</label>
+                                        <label for="name">در صورتی که سوال از نوع جای خالی باشد در محل های جای خالی در صورت سوال عبارت ### بگذارید</label>
                                     </div>
                                     <div class="form-group">
                                         <label for="name">سوال صفحه</label>
