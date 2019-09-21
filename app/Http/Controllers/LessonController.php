@@ -320,7 +320,7 @@ class LessonController extends Controller
                 $realChoices[] = $tmp;
             }
             $checkedChoices = $request->input('choices');
-            if($checkedChoice) {
+            if($checkedChoices) {
                 foreach($checkedChoices as $checkedChoice) {
                     $tmp = explode('_', $checkedChoice);
                     $tmp = (int)$tmp[1];
