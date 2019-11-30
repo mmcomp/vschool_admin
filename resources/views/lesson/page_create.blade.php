@@ -111,7 +111,7 @@
                                             <option value="fill_blank"{{ ($page && $page->question && $page->question->question_type=='fill_blank')?' selected':'' }}>جای خالی</option>
                                         </select>
                                     </div>
-                                    @if(($page && $page->question && $page->question->question_type=='answer') || !isset($page->question))
+                                    @if(($page && $page->question && $page->question->question_type=='answer') || !($page->question))
                                     <div class="form-group" id="answer-div">
                                         <label for="name">پاسخ</label>
                                         <textarea class="form-control" name="answer" >{{ ($page && $page->question)?$page->question->answer:'' }}</textarea>
@@ -121,7 +121,7 @@
                                         پاسخ
                                         </a>                                    
                                     </div>
-                                    @else if($page && $page->question && $page->question->question_type!='answer')
+                                    @elseif($page && $page->question && $page->question->question_type!='answer')
                                     <div class="form-group" id="answers-div">
                                         <a class="btn btn-primary" onclick="addAnswer();">
                                         پاسخ
@@ -353,6 +353,15 @@
         renderText();
     }
     function rotateData () {
+        for(let i = 0;i < dataOrder.length;i++) {
+            if(dataOrder[i].deleted===false) {
+                if(dataOrder[i].type!='image') {
+                    dataOrder[i].data = $("#" + dataOrder[i].type + "_" + i).val();
+                }else if(dataOrder[i].data == ''){
+                    dataOrder[i].data = 'image_' + i;
+                }
+            }
+        }
         rotateArray();
         renderData();
     }
