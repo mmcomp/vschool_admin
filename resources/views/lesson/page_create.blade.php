@@ -52,27 +52,27 @@
                                     $key = explode('.', $part->data);
                                     $key = $key[0];
                                     @endphp
-                                    <div class="form-group">
+                                    <div class="form-group part">
                                         <label for="name">تصویر </label><button class="btn btn-danger pull-left" onclick="removeNote(this, {{$id}});">X</button>
                                         <img style="height: 100px;" src="/page_images/page_{{ $page->id }}/{{ $part->data }}" />
                                         <input type="file" name="{{ $key }}" class="aimage form-control" accept="image/*" />
                                     </div>
                                     @endif
                                     @if($part->type=='content')
-                                    <div class="form-group">
+                                    <div class="form-group part">
                                         <label for="name">متن </label><button class="btn btn-danger pull-left" onclick="removeNote(this, {{$id}});">X</button>
                                         <textarea id="content_{{$id}}" onblur="renderText();" class="acontent form-control">{{ $part->data }}</textarea>
                                     </div>
                                     @endif
                                     @if($part->type=='formula')
-                                    <div class="form-group answers">
+                                    <div class="form-group answers part">
                                         <label for="name">فرمول </label><button class="btn btn-danger pull-left" onclick="removeNote(this, {{$id}});">X</button>
                                         <textarea id="formula_{{$id}}" onblur="renderText();" class="tex latex form-control">{{ $part->data }}</textarea>
                                         <span class="formulas">{{ $part->data }}</span>
                                     </div>
                                     @endif
                                     @if($part->type=='note')
-                                    <div class="form-group">
+                                    <div class="form-group part">
                                         <label for="name">نکته </label><button class="btn btn-danger pull-left" onclick="removeNote(this, {{$id}});">X</button>
                                         <textarea id="note_{{$id}}" class="form-control notes" >{{ isset($part->data)?$part->data:'' }}</textarea>
                                     </div>
@@ -92,6 +92,9 @@
                                         <a class="btn btn-primary" onclick="addPart();">
                                         افزودن
                                         </a>
+                                        <a class="btn btn-danger" onclick="rotateData();">
+                                        چرخش
+                                        </a>
                                     </div>
                                     <div class="form-group">
                                         <label for="name">در صورتی که سوال از نوع جای خالی باشد در محل های جای خالی در صورت سوال عبارت ### بگذارید</label>
@@ -108,7 +111,7 @@
                                             <option value="fill_blank"{{ ($page && $page->question && $page->question->question_type=='fill_blank')?' selected':'' }}>جای خالی</option>
                                         </select>
                                     </div>
-                                    @if($page && $page->question && $page->question->question_type=='answer')
+                                    @if(($page && $page->question && $page->question->question_type=='answer') || !isset($page->question))
                                     <div class="form-group" id="answer-div">
                                         <label for="name">پاسخ</label>
                                         <textarea class="form-control" name="answer" >{{ ($page && $page->question)?$page->question->answer:'' }}</textarea>
@@ -118,11 +121,7 @@
                                         پاسخ
                                         </a>                                    
                                     </div>
-                                    @else
-                                    <div class="form-group" id="answer-div">
-                                        <label for="name">پاسخ</label>
-                                        <textarea class="form-control" name="answer" >{{ ($page && $page->question)?$page->question->answer:'' }}</textarea>
-                                    </div>
+                                    @else if($page && $page->question && $page->question->question_type!='answer')
                                     <div class="form-group" id="answers-div">
                                         <a class="btn btn-primary" onclick="addAnswer();">
                                         پاسخ
@@ -170,12 +169,15 @@
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> -->
 <script>
     let dataOrder = [];
+    let page_id = -1;
     @if($page && $page->page)
+    page_id = {{$page->id}};
     @php
     $theData = [];
     foreach($page->page->data as $part) {
         if($part->type=='image') {
             $key = explode('.', $part->data);
+            $part->ext = $key[1];
             $key = $key[0];
             $part->data = $key;
         }
@@ -203,29 +205,46 @@
             deleted: false,
         });
     }
-    function addImage(id) {
+    function addImage(id, data, ext) {
         var i = $(".aimage").length + 1
-        $("#end-part").before(`<div class="form-group">
+        if(data && page_id>=0) {
+            let key = data.split('.')[0]
+            $("#end-part").before(`<div class="form-group part">
+                <label for="name">تصویر </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
+                <img style="height: 100px;" src="/page_images/page_${ page_id }/${ data }.${ ext }" />
+                <input type="file" name="${ key }" class="aimage form-control" accept="image/*" />
+            </div>`);
+        }else {
+            $("#end-part").before(`<div class="form-group part">
                 <label for="name">تصویر </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
                 <input type="file" name="image_${ id }" class="aimage form-control" accept="image/*" />
             </div>`);
+        }
     }
-    function addContent(id) {
+    function addContent(id, data) {
         var i = $(".acontent").length + 1
-        $("#end-part").before(`<div class="form-group">
+        if(!data) {
+            data = ''
+        }
+        $("#end-part").before(`<div class="form-group part">
                 <label for="name">متن </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
-                <textarea id="content_${id}" onblur="renderText();" class="acontent form-control"></textarea>
+                <textarea id="content_${id}" onblur="renderText();" class="acontent form-control">${data}</textarea>
             </div>`);
     }
     function removeNote(dobj, id) {
-        dataOrder[id].deleted = true;
-        $(dobj).parent().remove();
+        if(confirm('آیا حذف انجام شود؟')) {
+            dataOrder[id].deleted = true;
+            $(dobj).parent().remove();
+        }
     }
-    function addNote(id) {
+    function addNote(id, data) {
         var i = $(".notes").length + 1
-        $("#end-part").before(`<div class="form-group">
+        if(!data) {
+            data = ''
+        }
+        $("#end-part").before(`<div class="form-group part">
                 <label for="name">نکته </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
-                <textarea id="note_${id}" class="form-control notes" ></textarea>
+                <textarea id="note_${id}" class="form-control notes" >${data}</textarea>
             </div>`);
     }
     function updatePage() {
@@ -279,12 +298,15 @@
             $(field).val(`choises_${id}`);
         });
     }
-    function addFormula(id) {
+    function addFormula(id, data) {
         var i = $(".tex").length + 1
-        $("#end-part").before(`<div class="form-group answers">
+        if(!data) {
+            data = ''
+        }
+        $("#end-part").before(`<div class="form-group answers part">
                 <label for="name">فرمول </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
-                <textarea id="formula_${id}" onblur="renderText();" class="tex latex form-control"></textarea>
-                <span class="formulas"></span>
+                <textarea id="formula_${id}" onblur="renderText();" class="tex latex form-control">${data}</textarea>
+                <span class="formulas">${data}</span>
             </div>`);
     }
     function renderText() {
@@ -307,6 +329,32 @@
             //     // finally
             // });
         });
+    }
+    function rotateArray () {
+        let lastElement = dataOrder.pop();
+        dataOrder.unshift(lastElement);
+        return dataOrder;
+    }
+    function renderData () {
+        $("div.part").remove();
+        let i = 0;
+        for(let id in dataOrder) {
+            i = id;
+            if(dataOrder[i].type=='image') {
+                addImage(id, dataOrder[i].data, dataOrder[i].ext);
+            }else if(dataOrder[i].type=='content'){
+                addContent(id, dataOrder[i].data);
+            }else if(dataOrder[i].type=='note'){
+                addNote(id, dataOrder[i].data);
+            }else if(dataOrder[i].type=='formula'){
+                addFormula(id, dataOrder[i].data);
+            }
+        }
+        renderText();
+    }
+    function rotateData () {
+        rotateArray();
+        renderData();
     }
     var MQ = MathQuill.getInterface(2);
     $(document).ready(function() {
