@@ -282,10 +282,12 @@ class LessonController extends Controller
                 $realChoices[] = $tmp;
             }
             $checkedChoices = $request->input('choices');
-            foreach($checkedChoices as $checkedChoice) {
-                $tmp = explode('_', $checkedChoice);
-                $tmp = (int)$tmp[1];
-                $realChoices[$tmp]->checked = true;
+            if($checkedChoices) {
+                foreach($checkedChoices as $checkedChoice) {
+                    $tmp = explode('_', $checkedChoice);
+                    $tmp = (int)$tmp[1];
+                    $realChoices[$tmp]->checked = true;
+                }
             }
         }
         $page->load('lesson.chapter');
