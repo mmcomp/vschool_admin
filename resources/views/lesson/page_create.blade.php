@@ -340,14 +340,16 @@
         let i = 0;
         for(let id in dataOrder) {
             i = id;
-            if(dataOrder[i].type=='image') {
-                addImage(id, dataOrder[i].data, dataOrder[i].ext);
-            }else if(dataOrder[i].type=='content'){
-                addContent(id, dataOrder[i].data);
-            }else if(dataOrder[i].type=='note'){
-                addNote(id, dataOrder[i].data);
-            }else if(dataOrder[i].type=='formula'){
-                addFormula(id, dataOrder[i].data);
+            if(dataOrder[i].deleted==false) {
+                if(dataOrder[i].type=='image') {
+                    addImage(id, dataOrder[i].data, dataOrder[i].ext);
+                }else if(dataOrder[i].type=='content'){
+                    addContent(id, dataOrder[i].data);
+                }else if(dataOrder[i].type=='note'){
+                    addNote(id, dataOrder[i].data);
+                }else if(dataOrder[i].type=='formula'){
+                    addFormula(id, dataOrder[i].data);
+                }
             }
         }
         renderText();
