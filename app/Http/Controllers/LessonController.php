@@ -248,13 +248,29 @@ class LessonController extends Controller
 
         $page->lessons_id = $id;
         $thepage = json_decode($request->input('page'));
-        if($request->image) {
-            $thepage->image = [$request->image->store('page_images')];
+        $tmpData = $thepage->data;
+        $thepage->data = [];
+        foreach($tmpData as $i=>$part) {
+            if($part->deleted!=true) {
+                $thepage->data[] = $part;
+            }
         }
-        $page->page = $thepage;
         $page->page_order = $page_order;
         $page->save();
 
+        $images = [];
+        foreach($request->allFiles() as $key=>$image) {
+            $images[$key] = $key . "." . $image->getClientOriginalExtension();
+            $image->storeAs('page_images/page_' . $page->id, $key . "." . $image->getClientOriginalExtension());
+        }
+        foreach($thepage->data as $i=>$part) {
+            if($part->type=='image') {
+                $thepage->data[$i]->data = $images[$part->data];
+            }
+        }
+        $page->page = $thepage;
+        $page->save();
+        
         $question = new Question;
         $realChoices = [];
         if($request->input('question_type')!='answer') {
@@ -301,11 +317,34 @@ class LessonController extends Controller
                 "page"=>$page
             ]);
         }
-
+        $oldImages = [];
+        foreach($page->page->data as $i=>$part) {
+            if($part->type=='image') {
+                $tmp = explode('.', $part->data);
+                $oldImages[$tmp[0]] = $part->data;
+            }
+        }
         $thepage = json_decode($request->input('page'));
-        $thepage->image = $page->page->image;
-        if($request->image) {
-            $thepage->image[] = $request->image->store('page_images');
+        $tmpData = $thepage->data;
+        $thepage->data = [];
+        foreach($tmpData as $i=>$part) {
+            if($part->deleted!=true) {
+                $thepage->data[] = $part;
+            }
+        }
+        $images = [];
+        foreach($request->allFiles() as $key=>$image) {
+            $images[$key] = $key . "." . $image->getClientOriginalExtension();
+            $image->storeAs('page_images/page_' . $id, $key . "." . $image->getClientOriginalExtension());
+        }
+        foreach($thepage->data as $i=>$part) {
+            if($part->type=='image') {
+                if(!isset($images[$part->data])) {
+                    $thepage->data[$i]->data = $oldImages[$part->data];
+                }else {
+                    $thepage->data[$i]->data = $images[$part->data];
+                }
+            }
         }
         $page->page = $thepage;
         $page->save();

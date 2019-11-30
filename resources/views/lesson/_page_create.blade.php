@@ -6,9 +6,6 @@
     span.formulas {
         direction: ltr;
     }
-    textarea.tex {
-        direction: ltr;
-    }
 </style>
 @endsection
 
@@ -38,60 +35,67 @@
                       <div class="box-body">
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="name">موضوع</label>
+                                    <input type="text" class="form-control" id="title" name="title" placeholder="موضوع" value="{{ ($page && $page->page && $page->page->title)?$page->page->title:'' }}">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" onclick="addFormula();">
+                                    فرمول
+                                    </button>
+                                </div>
+
+                                <div class="form-group" id="formulas-div">
+                                @if($page && $page->page!=null && isset($page->page->formulas))
+                                @foreach($page->page->formulas as $i => $formula)
+                                <div class="form-group">
+                                    <label for="name">{{ $i+1 }}</label><button class="btn btn-danger pull-left" onclick="removeNote(this);">X</button>
+                                    <textarea class="tex latex form-control">{{ $formula }}</textarea>
+                                    <span class="formulas">{{ $formula }}</span>
+                                </div>
+                                @endforeach
+                                @endif
+                                </div>
+                                <div class="form-group">
+                                    <label for="name">متن اول</label>
+                                    <textarea class="form-control" id="content1" name="content1" >{{ ($page && $page->page && $page->page->content1)?$page->page->content1:'' }}</textarea>
+                                </div> 
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary" onclick="addNote();">
+                                    نکته
+                                    </button>
+                                </div>
+
+                                <div class="form-group" id="notes">
+                                @if($page && $page->page!=null )
+                                @foreach($page->page->notes as $note)
+                                <div class="form-group">
+                                    <label for="name">نکته</label><button class="btn btn-danger pull-left" onclick="removeNote(this);">X</button>
+                                    <textarea class="form-control notes" >{{ $note }}</textarea>
+                                </div>
+                                @endforeach
+                                @endif
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="name">متن دوم</label>
+                                    <textarea class="form-control" id="content2" name="content2" >{{ ($page && $page->page && $page->page->content2)?$page->page->content2:'' }}</textarea>
+                                </div>
+                                @if($page && $page->page && $page->page->image)
+                                @foreach($page->page->image as $i=>$image)
+                                <div class="form-group">
+                                    <label>{{ $i+1 }}</label>
+                                    <img src="/{{ $image }}" />
+                                </div>
+                                @endforeach
+                                @endif
                                 <form method="post" id="frm" enctype="multipart/form-data">
                                     @csrf
+                                    <input type="hidden" name="page" id="page" value='' />
                                     <div class="form-group">
-                                        <label for="name">موضوع</label>
-                                        <input type="text" class="form-control" id="title" placeholder="موضوع" value="{{ ($page && $page->page && $page->page->title)?$page->page->title:'' }}">
-                                    </div>
-                                    <input type="hidden" id="page" name="page" />
-                                    @if(isset($page->page->data))
-                                    @foreach($page->page->data as $id=>$part)
-                                    @if($part->type=='image')
-                                    @php
-                                    $key = explode('.', $part->data);
-                                    $key = $key[0];
-                                    @endphp
-                                    <div class="form-group">
-                                        <label for="name">تصویر </label><button class="btn btn-danger pull-left" onclick="removeNote(this, {{$id}});">X</button>
-                                        <img style="height: 100px;" src="/page_images/page_{{ $page->id }}/{{ $part->data }}" />
-                                        <input type="file" name="{{ $key }}" class="aimage form-control" accept="image/*" />
-                                    </div>
-                                    @endif
-                                    @if($part->type=='content')
-                                    <div class="form-group">
-                                        <label for="name">متن </label><button class="btn btn-danger pull-left" onclick="removeNote(this, {{$id}});">X</button>
-                                        <textarea id="content_{{$id}}" onblur="renderText();" class="acontent form-control">{{ $part->data }}</textarea>
-                                    </div>
-                                    @endif
-                                    @if($part->type=='formula')
-                                    <div class="form-group answers">
-                                        <label for="name">فرمول </label><button class="btn btn-danger pull-left" onclick="removeNote(this, {{$id}});">X</button>
-                                        <textarea id="formula_{{$id}}" onblur="renderText();" class="tex latex form-control">{{ $part->data }}</textarea>
-                                        <span class="formulas">{{ $part->data }}</span>
-                                    </div>
-                                    @endif
-                                    @if($part->type=='note')
-                                    <div class="form-group">
-                                        <label for="name">نکته </label><button class="btn btn-danger pull-left" onclick="removeNote(this, {{$id}});">X</button>
-                                        <textarea id="note_{{$id}}" class="form-control notes" >{{ isset($part->data)?$part->data:'' }}</textarea>
-                                    </div>
-                                    @endif
-                                    @endforeach
-                                    @endif
-                                    <div id="end-part" class="form-group">
-                                        <label for="name">نوع قسمت</label>
-                                        <select id="part"class="form-control">
-                                            <option value="content">متن</option>
-                                            <option value="formula">فرمول</option>
-                                            <option value="note">نکته</option>
-                                            <option value="image">تصویر</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <a class="btn btn-primary" onclick="addPart();">
-                                        افزودن
-                                        </a>
+                                        <label for="name">تصویر</label>
+                                        <input type="file" name="image" />
                                     </div>
                                     <div class="form-group">
                                         <label for="name">در صورتی که سوال از نوع جای خالی باشد در محل های جای خالی در صورت سوال عبارت ### بگذارید</label>
@@ -166,83 +170,32 @@
 
 @section('extra_script')
 <script src="/admin/dist/js/mathquill.min.js"></script>
-<!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script> -->
 <script>
-    let dataOrder = [];
-    @if($page && $page->page)
-    @php
-    $theData = [];
-    foreach($page->page->data as $part) {
-        if($part->type=='image') {
-            $key = explode('.', $part->data);
-            $key = $key[0];
-            $part->data = $key;
-        }
-        $theData[] = $part;
-    }
-    @endphp
-    dataOrder = @json($theData);
-    @endif
-    function addPart() {
-        let part = $("#part").val();
-        const index = dataOrder.length;
-        // console.log(part);
-        if(part=='formula') {
-            addFormula(index);
-        }else if(part == 'note') {
-            addNote(index);
-        }else if(part == 'content') {
-            addContent(index);
-        }else if(part == 'image') {
-            addImage(index);
-        }
-        dataOrder.push({
-            type: part,
-            data: '',
-            deleted: false,
-        });
-    }
-    function addImage(id) {
-        var i = $(".aimage").length + 1
-        $("#end-part").before(`<div class="form-group">
-                <label for="name">تصویر </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
-                <input type="file" name="image_${ id }" class="aimage form-control" accept="image/*" />
-            </div>`);
-    }
-    function addContent(id) {
-        var i = $(".acontent").length + 1
-        $("#end-part").before(`<div class="form-group">
-                <label for="name">متن </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
-                <textarea id="content_${id}" onblur="renderText();" class="acontent form-control"></textarea>
-            </div>`);
-    }
-    function removeNote(dobj, id) {
-        dataOrder[id].deleted = true;
+    function removeNote(dobj) {
         $(dobj).parent().remove();
     }
-    function addNote(id) {
-        var i = $(".notes").length + 1
-        $("#end-part").before(`<div class="form-group">
-                <label for="name">نکته </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
-                <textarea id="note_${id}" class="form-control notes" ></textarea>
+    function addNote() {
+        $("#notes").prepend(`<div class="form-group">
+                <label for="name">نکته</label><button class="btn btn-danger pull-left" onclick="removeNote(this);">X</button>
+                <textarea class="form-control notes" ></textarea>
             </div>`);
     }
     function updatePage() {
-        let page = {
+        var page = {
             title: $("#title").val(),
-            data: [],
-        };
-        for(let i = 0;i < dataOrder.length;i++) {
-            if(dataOrder[i].deleted===false) {
-                if(dataOrder[i].type!='image') {
-                    dataOrder[i].data = $("#" + dataOrder[i].type + "_" + i).val();
-                }else if(dataOrder[i].data == ''){
-                    dataOrder[i].data = 'image_' + i;
-                }
-                page.data.push(dataOrder[i]);
-            }
+            content1: $("#content1").val(),
+            content2: $("#content1").val(),
+            notes: [],
+            image: [],
+            formulas: [],
         }
+        $(".notes").each(function(id, field) {
+            page.notes.push(field.value);
+        });
+        $(".tex").each(function(id, field) {
+            page.formulas.push(field.value);
+        });
+        // console.log(page);
         $("#page").val(JSON.stringify(page));
         $("#frm").submit();
     }
@@ -279,11 +232,11 @@
             $(field).val(`choises_${id}`);
         });
     }
-    function addFormula(id) {
+    function addFormula() {
         var i = $(".tex").length + 1
-        $("#end-part").before(`<div class="form-group answers">
-                <label for="name">فرمول </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
-                <textarea id="formula_${id}" onblur="renderText();" class="tex latex form-control"></textarea>
+        $("#formulas-div").append(`<div class="form-group answers">
+                <label for="name">${ i }</label><button class="btn btn-danger pull-left" onclick="removeNote(this);">X</button>
+                <textarea onblur="renderText();" class="tex latex form-control"></textarea>
                 <span class="formulas"></span>
             </div>`);
     }
@@ -292,20 +245,6 @@
             var tex = $(field).val();
             $(field).parent().find('span').text(tex);
             MQ.StaticMath($(field).parent().find('span')[0]);
-            // let output = $(field).parent().find('span')[0];
-            // MathJax.texReset();
-            // var options = MathJax.getMetricsFor(output);
-            // options.display = true;
-            // MathJax.tex2chtmlPromise(tex, options).then(function (node) {
-            //     console.log(node);
-            //     output.appendChild(node);
-            //     MathJax.startup.document.clear();
-            //     MathJax.startup.document.updateDocument();
-            // }).catch(function (err) {
-            //     output.appendChild(document.createElement('pre')).appendChild(document.createTextNode(err.message));
-            // }).then(function () {
-            //     // finally
-            // });
         });
     }
     var MQ = MathQuill.getInterface(2);
