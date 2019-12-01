@@ -48,6 +48,15 @@
                                     <a class="btn btn-danger btn-delete" href="/course/delete/{{ $course->id }}">
                                     حذف
                                     </a>
+                                    @if($course->published==0)
+                                    <a class="btn btn-warning btn-publish" href="/course/publish/{{ $course->id }}">
+                                    انتشار
+                                    </a>
+                                    @else
+                                    <a class="btn btn-danger btn-unpublish" href="/course/unpublish/{{ $course->id }}">
+                                    عدم انتشار
+                                    </a>
+                                    @endif
                                   </td>
                                 </tr>
                               @endforeach
@@ -96,6 +105,16 @@
   });
   $(".btn-delete").click(function(event) {
     if(!confirm('آیا حذف انجام شود؟')){
+      event.preventDefault();
+    }
+  });
+  $(".btn-publish").click(function(event) {
+    if(!confirm('آیا انتشار انجام شود؟')){
+      event.preventDefault();
+    }
+  });
+  $(".btn-unpublish").click(function(event) {
+    if(!confirm('آیا عدم انتشار انجام شود؟')){
       event.preventDefault();
     }
   });

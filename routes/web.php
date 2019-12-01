@@ -50,6 +50,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/delete/{id}', 'CourseController@delete');
         Route::any('/create', 'CourseController@create');
         Route::any('/edit/{id}', 'CourseController@edit');
+        Route::get('/publish/{id}', 'CourseController@publish');
+        Route::get('/unpublish/{id}', 'CourseController@unpublish');
     });
 
     Route::prefix('/course_select')->group(function () {

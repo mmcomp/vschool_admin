@@ -50,14 +50,14 @@ class CourseController extends Controller
         $course->description = $request->input('description');
         $course->save();
         
-        $request->session()->flash('msg_success', 'کرس مورد نظر با موفقیت ثبت شد');
+        $request->session()->flash('msg_success', 'دوره مورد نظر با موفقیت ثبت شد');
         return redirect('/course');
     }
 
     public function edit(Request $request, $id) {
         $course = Course::find($id);
         if(!$course) {
-            $request->session()->flash('msg_danger', 'کرس مورد نظر پیدا نشد');
+            $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
             return redirect('/course');
         }
 
@@ -72,21 +72,20 @@ class CourseController extends Controller
         $course->description = $request->input('description');
         $course->save();
         
-        $request->session()->flash('msg_success', 'کرس مورد نظر با موفقیت بروز شد');
+        $request->session()->flash('msg_success', 'دوره مورد نظر با موفقیت بروز شد');
         return redirect('/course');
     }
-
 
     public function delete(Request $request, $id) {
         $course = Course::find($id);
         if(!$course) {
-            $request->session()->flash('msg_danger', 'کرس مورد نظر پیدا نشد');
+            $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
             return redirect('/course');
         }
 
         $course->delete();
         
-        $request->session()->flash('msg_success', 'کرس مورد نظر با موفقیت حذف شد');
+        $request->session()->flash('msg_success', 'دوره مورد نظر با موفقیت حذف شد');
         return redirect('/course');
     }
 
@@ -121,5 +120,33 @@ class CourseController extends Controller
             "msgs"=>$msgs,
             "courses"=>$courses,
         ]);
+    }
+
+    public function publish(Request $request, $id) {
+        $course = Course::find($id);
+        if(!$course) {
+            $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
+            return redirect('/course');
+        }
+
+        $course->published = 1;
+        $course->save();
+        
+        $request->session()->flash('msg_success', 'دوره مورد نظر با موفقیت انتشار یافت');
+        return redirect('/course');
+    }
+
+    public function unpublish(Request $request, $id) {
+        $course = Course::find($id);
+        if(!$course) {
+            $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
+            return redirect('/course');
+        }
+
+        $course->published = 0;
+        $course->save();
+        
+        $request->session()->flash('msg_success', 'دوره مورد نظر با موفقیت از انتشار خارج شد');
+        return redirect('/course');
     }
 }
