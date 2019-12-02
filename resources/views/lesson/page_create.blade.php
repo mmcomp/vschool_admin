@@ -254,7 +254,7 @@
     function updatePage() {
         if($("#question_type").val()=='choice_question') {
             let answerCount = $("div.answer").length
-            if(answerCount<2 || answerCount>5) {
+            if(answerCount<2 || answerCount>4) {
                 alert('تعداد گزینه های سوال چند گزینه ای باید ۲ تا حداکثر ۵ تا باشد');
                 return false;
             }
