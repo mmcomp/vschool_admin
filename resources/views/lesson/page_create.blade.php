@@ -252,6 +252,13 @@
             </div>`);
     }
     function updatePage() {
+        if($("#question_type").val()=='choice_question') {
+            let answerCount = $("div.answer").length
+            if(answerCount<2 || answerCount>5) {
+                alert('تعداد گزینه های سوال چند گزینه ای باید ۲ تا حداکثر ۵ تا باشد');
+                return false;
+            }
+        }
         let page = {
             title: $("#title").val(),
             data: [],

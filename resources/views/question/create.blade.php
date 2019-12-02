@@ -157,12 +157,19 @@
             </div>`);
     }
     function updatePage() {
-        var formulas = []
-        $(".tex").each(function(id, field) {
-            formulas.push(field.value);
-        });
-        console.log(formulas);
-        $("#formulas").val(JSON.stringify(formulas));
+        if($("#question_type").val()=='choice_question') {
+            let answerCount = $("div.answer").length
+            if(answerCount<2 || answerCount>5) {
+                alert('تعداد گزینه های سوال چند گزینه ای باید ۲ تا حداکثر ۵ تا باشد');
+                return false;
+            }
+        }
+        // var formulas = []
+        // $(".tex").each(function(id, field) {
+        //     formulas.push(field.value);
+        // });
+        // console.log(formulas);
+        // $("#formulas").val(JSON.stringify(formulas));
         $("#frm").submit();
     }
     function showAnswer(dobj) {
