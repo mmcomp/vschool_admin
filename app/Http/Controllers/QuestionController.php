@@ -76,7 +76,6 @@ class QuestionController extends Controller
             ]);
         }
 
-        $question->formulas = \json_decode($request->input('formulas'));
         $realChoices = [];
         if($request->input('question_type')!='answer') {
             $choices = $request->input('choises_answers');
@@ -134,7 +133,6 @@ class QuestionController extends Controller
             ]);
         }
 
-        $question->formulas = \json_decode($request->input('formulas'));
         $realChoices = [];
         if($request->input('question_type')!='answer') {
             $choices = $request->input('choises_answers');

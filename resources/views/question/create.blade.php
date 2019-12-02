@@ -42,19 +42,19 @@
                       <div class="box-body">
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <button class="btn btn-primary" onclick="addFormula();">
                                     فرمول
                                     </button>
-                                </div>
+                                </div> -->
                                 <div class="form-group" id="formulas-div">
                                 @if($question && isset($question->formulas))
                                 @foreach($question->formulas as $i => $formula)
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label for="name">{{ $i+1 }}</label><button class="btn btn-danger pull-left" onclick="removeNote(this);">X</button>
                                         <textarea class="tex latex form-control">{{ $formula }}</textarea>
                                         <span class="formulas">{{ $formula }}</span>
-                                    </div>
+                                    </div> -->
                                 @endforeach
                                 @endif
                                 </div>
