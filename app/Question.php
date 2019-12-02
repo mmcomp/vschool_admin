@@ -10,6 +10,6 @@ class Question extends Model
 
     protected $casts = [
         'choices'=>'object',
-        'formulas'=>'array'
+        // 'formulas'=>'array'
     ];
 }

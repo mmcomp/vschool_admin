@@ -76,18 +76,18 @@
                                             <option value="fill_blank"{{ ($question && $question->question_type=='fill_blank')?' selected':'' }}>جای خالی</option>
                                         </select>
                                     </div>
-                                    @if($question && $question->question_type=='answer')
+                                    @if(($question && $question->question_type=='answer') || (!isset($question->id)))
                                     <div class="form-group" id="answer-div">
                                         <label for="name">پاسخ</label>
                                         <textarea class="form-control" name="answer" >{{ ($question)?$question->answer:'' }}</textarea>
                                     </div>
-                                    <div class="form-group" id="answers-div" style="display: none;">
+                                    <div class="form-group" id="answers-div" style="display:none;">
                                         <a class="btn btn-primary" onclick="addAnswer();">
                                         پاسخ
-                                        </a>                                    
+                                        </a> 
                                     </div>
-                                    @else
-                                    <div class="form-group" id="answer-div">
+                                    @elseif($question && $question->question_type!='answer')
+                                    <div class="form-group" id="answer-div" style="display:none;">
                                         <label for="name">پاسخ</label>
                                         <textarea class="form-control" name="answer" >{{ ($question)?$question->answer:'' }}</textarea>
                                     </div>

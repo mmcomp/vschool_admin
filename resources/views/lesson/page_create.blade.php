@@ -122,6 +122,10 @@
                                         </a>                                    
                                     </div>
                                     @elseif($page && $page->question && $page->question->question_type!='answer')
+                                    <div class="form-group" id="answer-div" style="display: none;">
+                                        <label for="name">پاسخ</label>
+                                        <textarea class="form-control" name="answer" >{{ ($page && $page->question)?$page->question->answer:'' }}</textarea>
+                                    </div>
                                     <div class="form-group" id="answers-div">
                                         <a class="btn btn-primary" onclick="addAnswer();">
                                         پاسخ
