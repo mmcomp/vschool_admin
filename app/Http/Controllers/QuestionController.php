@@ -55,7 +55,8 @@ class QuestionController extends Controller
         return view('question.index', [
             "msgs"=>$msgs,
             "questions"=>$questions,
-            "course"=>$course
+            "course"=>$course,
+            "user"=>$user,
         ]);
     }
 
@@ -70,7 +71,8 @@ class QuestionController extends Controller
         if(!$request->isMethod('post')) {
             return view('question.create', [
                 "course"=>$course,
-                "question"=>$question
+                "question"=>$question,
+                "user"=>$user,
             ]);
         }
 
@@ -97,6 +99,11 @@ class QuestionController extends Controller
         $question->choices = $realChoices;
         $question->score = $request->input('score');
         $question->courses_id = $id;
+        if($user->group_id==0) {
+            $question->literary_editor = ($request->input('literary_editor')!=null)?1:0;
+            $question->scientific_editor = ($request->input('scientific_editor')!=null)?1:0;
+            $question->layout_page_editor = ($request->input('layout_page_editor')!=null)?1:0;
+        }
         $question->save();
         
         $request->session()->flash('msg_success', 'سوال مورد نظر با موفقیت ثبت شد');
@@ -118,7 +125,8 @@ class QuestionController extends Controller
         if(!$request->isMethod('post')) {
             return view('question.create', [
                 "course"=>$course,
-                "question"=>$question
+                "question"=>$question,
+                "user"=>$user,
             ]);
         }
 
@@ -126,17 +134,21 @@ class QuestionController extends Controller
         $realChoices = [];
         if($request->input('question_type')!='answer') {
             $choices = $request->input('choises_answers');
-            foreach($choices as $choice) {
-                $tmp = new \stdClass;
-                $tmp->checked = false;
-                $tmp->answer = $choice;
-                $realChoices[] = $tmp;
+            if($choices) {
+                foreach($choices as $choice) {
+                    $tmp = new \stdClass;
+                    $tmp->checked = false;
+                    $tmp->answer = $choice;
+                    $realChoices[] = $tmp;
+                }    
             }
             $checkedChoices = $request->input('choices');
-            foreach($checkedChoices as $checkedChoice) {
-                $tmp = explode('_', $checkedChoice);
-                $tmp = (int)$tmp[1];
-                $realChoices[$tmp]->checked = true;
+            if($checkedChoices) {
+                foreach($checkedChoices as $checkedChoice) {
+                    $tmp = explode('_', $checkedChoice);
+                    $tmp = (int)$tmp[1];
+                    $realChoices[$tmp]->checked = true;
+                }
             }
         }
         $question->question = $request->input('question');
@@ -144,6 +156,11 @@ class QuestionController extends Controller
         $question->answer = $request->input('answer');
         $question->choices = $realChoices;
         $question->score = $request->input('score');
+        if($user->group_id==0) {
+            $question->literary_editor = ($request->input('literary_editor')!=null)?1:0;
+            $question->scientific_editor = ($request->input('scientific_editor')!=null)?1:0;
+            $question->layout_page_editor = ($request->input('layout_page_editor')!=null)?1:0;
+        }
         $question->save();
         
         $request->session()->flash('msg_success', 'سوال مورد نظر با موفقیت ویرایش شد');

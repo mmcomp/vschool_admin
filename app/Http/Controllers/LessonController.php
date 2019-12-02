@@ -87,6 +87,7 @@ class LessonController extends Controller
             "lessons"=>$lessons,
             "allChapters"=>$allChapters,
             "chapters_id"=>$chapters_id,
+            "user"=>$user,
         ]);
     }
 
@@ -107,7 +108,8 @@ class LessonController extends Controller
         if(!$request->isMethod('post')) {
             return view('lesson.create', [
                 "lesson"=>$lesson,
-                "chapters"=>$chapters
+                "chapters"=>$chapters,
+                "user"=>$user,
             ]);
         }
 
@@ -122,6 +124,11 @@ class LessonController extends Controller
         $lesson->description = $request->input('description');
         $lesson->chapters_id = $request->input('chapters_id');
         $lesson->lesson_order = $lesson_order;
+        if($user->group_id==0) {
+            $lesson->literary_editor = ($request->input('literary_editor')!=null)?1:0;
+            $lesson->scientific_editor = ($request->input('scientific_editor')!=null)?1:0;
+            $lesson->layout_page_editor = ($request->input('layout_page_editor')!=null)?1:0;
+        }
         $lesson->save();
         
         $request->session()->flash('msg_success', 'درس مورد نظر با موفقیت ثبت شد');
@@ -149,13 +156,19 @@ class LessonController extends Controller
         if(!$request->isMethod('post')) {
             return view('lesson.create', [
                 "lesson"=>$lesson,
-                "chapters"=>$chapters
+                "chapters"=>$chapters,
+                "user"=>$user,
             ]);
         }
 
         $lesson->name = $request->input('name');
         $lesson->description = $request->input('description');
         $lesson->chapters_id = $request->input('chapters_id');
+        if($user->group_id==0) {
+            $lesson->literary_editor = ($request->input('literary_editor')!=null)?1:0;
+            $lesson->scientific_editor = ($request->input('scientific_editor')!=null)?1:0;
+            $lesson->layout_page_editor = ($request->input('layout_page_editor')!=null)?1:0;
+        }
         $lesson->save();
         
         $request->session()->flash('msg_success', 'درس مورد نظر با موفقیت بروزسانی شد');

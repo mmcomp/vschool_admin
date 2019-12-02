@@ -54,7 +54,21 @@
                                     <div class="form-group">
                                         <label for="name">توضحیات</label>
                                         <input type="text" class="form-control" id="description" name="description" placeholder="توضیحات" value="{{ ($lesson && $lesson->description)?$lesson->description:'' }}">
-                                    </div>                             
+                                    </div>
+                                    @if($user->group_id==0)
+                                    <div class="form-group">
+                                        <label for="name">ویراستاری</label><br/>
+                                        <p style="color: red;">
+                                            ادبی <input type="checkbox" id="literary_editor" name="literary_editor" value="literary_editor" {{ ($lesson && $lesson->literary_editor==1)?'checked':'' }} /><br/>
+                                        </p>
+                                        <p style="color: green;">
+                                            علمی <input type="checkbox" id="scientific_editor" name="scientific_editor" value="scientific_editor" {{ ($lesson && $lesson->scientific_editor==1)?'checked':'' }} /><br/>
+                                        </p>
+                                        <p style="color: blue;">
+                                            صفحه آرایی <input type="checkbox" id="layout_page_editor" name="layout_page_editor" value="layout_page_editor" {{ ($lesson && $lesson->layout_page_editor==1)?'checked':'' }} /><br/>
+                                        </p>
+                                    </div>
+                                    @endif          
                                 </div>
                                 <div class="col-xs-12">
                                     <button class="btn btn-primary pull-left">

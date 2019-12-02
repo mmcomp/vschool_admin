@@ -24,6 +24,14 @@
                       <div class="box-header">
                           <h3 class="box-title">صفحه</h3>
                           <a class="btn btn-primary pull-left" href="/question/create/{{ $course->id }}">ثبت سوال</a>
+                          @if($user->group_id==0)
+                          <div>
+                          راهنمای ویراستاری:<br/>
+                          ویراستاری ادبی <i title="ویراستاری ادبی" class="fas fa-check" style="color: red;"></i><br/>
+                          ویراستاری علمی <i title="ویراستاری علمی" class="fas fa-check" style="color: green;"></i><br/>
+                          ویراستاری صفحه آرایی <i title="ویراستاری صفحه آرایی" class="fas fa-check" style="color: blue;"></i>
+                          </div>
+                          @endif
                       </div><!-- /.box-header -->
                       <div class="box-body">
                           <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
@@ -31,6 +39,12 @@
                                 <tr>
                                   <th>ردیف</th>
                                   <th>موضوع</th>
+                                  @if($user->group_id==0)
+                                  <th>ویراستاری</th>
+                                  <!-- <th>ویراستاری ادبی</th>
+                                  <th>ویراستاری علمی</th>
+                                  <th>ویراستاری صفحه آرایی</th> -->
+                                  @endif
                                   <th>#</th>
                                 </tr>
                               </thead>
@@ -39,6 +53,19 @@
                                 <tr>
                                   <td>{{ $i + 1 }}</td>
                                   <td>{{ $question->question }}</td>
+                                  @if($user->group_id==0)
+                                  <td>
+                                    @if($question->literary_editor)
+                                    <i title="ویراستاری ادبی" class="fas fa-check" style="color: red;"></i>
+                                    @endif
+                                    @if($question->scientific_editor)
+                                    <i title="ویراستاری علمی" class="fas fa-check" style="color: green;"></i>
+                                    @endif
+                                    @if($question->layout_page_editor)
+                                    <i title="ویراستاری صفحه آرایی" class="fas fa-check" style="color: blue;"></i>
+                                    @endif
+                                  </td>
+                                  @endif
                                   <td>
                                     <a class="btn btn-success" href="/question/edit/{{ $question->id }}">
                                     ویرایش
@@ -54,6 +81,12 @@
                                 <tr>
                                   <th>ردیف</>
                                   <th>موضوع</th>
+                                  @if($user->group_id==0)
+                                  <th>ویراستاری</th>
+                                  <!-- <th>ویراستاری ادبی</th>
+                                  <th>ویراستاری علمی</th>
+                                  <th>ویراستاری صفحه آرایی</th> -->
+                                  @endif
                                   <th>#</th>
                                 </tr>
                               </tfoot>

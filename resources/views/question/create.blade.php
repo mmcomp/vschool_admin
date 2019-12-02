@@ -114,6 +114,20 @@
                                         <label for="name">امتیاز</label>
                                         <input type="number" class="form-control" name="score" placeholder="امتیاز" value="{{ ($question && $question->score)?$question->score:'0' }}">
                                     </div>
+                                    @if($user->group_id==0)
+                                    <div class="form-group">
+                                        <label for="name">ویراستاری</label><br/>
+                                        <p style="color: red;">
+                                            ادبی <input type="checkbox" id="literary_editor" name="literary_editor" value="literary_editor" {{ ($question && $question->literary_editor==1)?'checked':'' }} /><br/>
+                                        </p>
+                                        <p style="color: green;">
+                                            علمی <input type="checkbox" id="scientific_editor" name="scientific_editor" value="scientific_editor" {{ ($question && $question->scientific_editor==1)?'checked':'' }} /><br/>
+                                        </p>
+                                        <p style="color: blue;">
+                                            صفحه آرایی <input type="checkbox" id="layout_page_editor" name="layout_page_editor" value="layout_page_editor" {{ ($question && $question->layout_page_editor==1)?'checked':'' }} /><br/>
+                                        </p>
+                                    </div>
+                                    @endif  
                                 </form>
                             </div>
                             <div class="col-xs-12">

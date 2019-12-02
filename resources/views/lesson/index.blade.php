@@ -57,6 +57,14 @@
                             </select>
                             </form>
                           </div>
+                          @if($user->group_id==0)
+                          <div>
+                          راهنمای ویراستاری:<br/>
+                          ویراستاری ادبی <i title="ویراستاری ادبی" class="fas fa-check" style="color: red;"></i><br/>
+                          ویراستاری علمی <i title="ویراستاری علمی" class="fas fa-check" style="color: green;"></i><br/>
+                          ویراستاری صفحه آرایی <i title="ویراستاری صفحه آرایی" class="fas fa-check" style="color: blue;"></i>
+                          </div>
+                          @endif
                       </div><!-- /.box-header -->
                       <div class="box-body">
                           <table id="example2" class="table table-bordered table-hover table-striped" data-page-length='20'>
@@ -66,6 +74,12 @@
                                   <th>نام</th>
                                   <th>دوره</th>
                                   <th>فصل</th>
+                                  @if($user->group_id==0)
+                                  <th>ویراستاری</th>
+                                  <!-- <th>ویراستاری ادبی</th>
+                                  <th>ویراستاری علمی</th>
+                                  <th>ویراستاری صفحه آرایی</th> -->
+                                  @endif
                                   <th>#</th>
                                 </tr>
                               </thead>
@@ -80,6 +94,19 @@
                                   <td>{{ $lesson->name }}</td>
                                   <td>{{ $lesson->chapter->course->name }}</td>
                                   <td>{{ $lesson->chapter->name }}</td>
+                                  @if($user->group_id==0)
+                                  <td>
+                                    @if($lesson->literary_editor)
+                                    <i title="ویراستاری ادبی" class="fas fa-check" style="color: red;"></i>
+                                    @endif
+                                    @if($lesson->scientific_editor)
+                                    <i title="ویراستاری علمی" class="fas fa-check" style="color: green;"></i>
+                                    @endif
+                                    @if($lesson->layout_page_editor)
+                                    <i title="ویراستاری صفحه آرایی" class="fas fa-check" style="color: blue;"></i>
+                                    @endif
+                                  </td>
+                                  @endif
                                   <td>
                                     <a class="btn btn-primary" href="/lesson/page/{{ $lesson->id }}">
                                     صفحات
@@ -103,6 +130,12 @@
                                   <th>نام</th>
                                   <th>دوره</th>
                                   <th>فصل</th>
+                                  @if($user->group_id==0)
+                                  <th>ویراستاری</th>
+                                  <!-- <th>ویراستاری ادبی</th>
+                                  <th>ویراستاری علمی</th>
+                                  <th>ویراستاری صفحه آرایی</th> -->
+                                  @endif
                                   <th>#</th>
                                 </tr>
                               </tfoot>
