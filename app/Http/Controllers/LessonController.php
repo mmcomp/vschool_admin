@@ -312,6 +312,7 @@ class LessonController extends Controller
         $question->pages_id = $page->id;
         $question->lessons_id = $page->lessons_id;
         $question->courses_id = $page->lesson->chapter->courses_id;
+        $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
         $question->save();
 
 
@@ -390,7 +391,8 @@ class LessonController extends Controller
                 "answer"=>$request->input('answer'),
                 "choices"=>\json_encode($realChoices),
                 "score"=>$request->input('score'),
-                "courses_id"=>$page->lesson->chapter->courses_id
+                "courses_id"=>$page->lesson->chapter->courses_id,
+                "solution"=>(trim($request->input('solution'))!='')?trim($request->input('solution')):null,
             ]);
         }else {
             $question = new Question;
@@ -402,6 +404,7 @@ class LessonController extends Controller
             $question->pages_id = $page->id;
             $question->lessons_id = $page->lessons_id;
             $question->courses_id = $page->lesson->chapter->courses_id;
+            $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
             $question->save();
         }
 

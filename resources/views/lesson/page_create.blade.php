@@ -148,6 +148,10 @@
                                     </div>
                                     @endif
                                     <div class="form-group">
+                                        <label for="name">راه حل</label>
+                                        <textarea  class="form-control" name="solution" >{{ ($page && $page->question && $page->question->solution)?$page->question->solution:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="name">امتیاز</label>
                                         <input type="number" class="form-control" name="score" placeholder="امتیاز" value="{{ ($page && $page->question)?$page->question->score:'0' }}">
                                     </div>

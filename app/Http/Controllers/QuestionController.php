@@ -66,11 +66,13 @@ class QuestionController extends Controller
             $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
             return redirect('/course_select');
         }
+        $chapters = Chapter::where('courses_id', $id)->get();
         $user = Auth::user();  
         $question = new Question;      
         if(!$request->isMethod('post')) {
             return view('question.create', [
                 "course"=>$course,
+                "chapters"=>$chapters,
                 "question"=>$question,
                 "user"=>$user,
             ]);
@@ -102,11 +104,13 @@ class QuestionController extends Controller
         $question->choices = $realChoices;
         $question->score = $request->input('score');
         $question->courses_id = $id;
+        $question->chapters_id = (int)$request->input('chapters_id');
         if($user->group_id==0) {
             $question->literary_editor = ($request->input('literary_editor')!=null)?1:0;
             $question->scientific_editor = ($request->input('scientific_editor')!=null)?1:0;
             $question->layout_page_editor = ($request->input('layout_page_editor')!=null)?1:0;
         }
+        $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
         $question->save();
         
         $request->session()->flash('msg_success', 'سوال مورد نظر با موفقیت ثبت شد');
@@ -125,10 +129,12 @@ class QuestionController extends Controller
             $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
             return redirect('/course_select');
         }
+        $chapters = Chapter::where('courses_id', $question->courses_id)->get();
         if(!$request->isMethod('post')) {
             return view('question.create', [
                 "course"=>$course,
                 "question"=>$question,
+                "chapters"=>$chapters,
                 "user"=>$user,
             ]);
         }
@@ -158,11 +164,13 @@ class QuestionController extends Controller
         $question->answer = $request->input('answer');
         $question->choices = $realChoices;
         $question->score = $request->input('score');
+        $question->chapters_id = (int)$request->input('chapters_id');
         if($user->group_id==0) {
             $question->literary_editor = ($request->input('literary_editor')!=null)?1:0;
             $question->scientific_editor = ($request->input('scientific_editor')!=null)?1:0;
             $question->layout_page_editor = ($request->input('layout_page_editor')!=null)?1:0;
         }
+        $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
         $question->save();
         
         $request->session()->flash('msg_success', 'سوال مورد نظر با موفقیت ویرایش شد');

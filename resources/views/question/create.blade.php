@@ -111,8 +111,25 @@
                                     </div>
                                     @endif
                                     <div class="form-group">
+                                        <label for="name">راه حل</label>
+                                        <textarea  class="form-control" name="solution" >{{ ($question && $question->solution)?$question->solution:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="name">امتیاز</label>
                                         <input type="number" class="form-control" name="score" placeholder="امتیاز" value="{{ ($question && $question->score)?$question->score:'0' }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">فصل</label>
+                                        <select class="form-control" name="chapters_id" >
+                                            <option disable>همه</option>
+                                            @foreach($chapters as $chapter)
+                                            @if($question && $question->chapters_id && $question->chapters_id==$chapter->id)
+                                            <option value="{{ $chapter->id }}" selected>{{ $chapter->name }}</option>
+                                            @else
+                                            <option value="{{ $chapter->id }}">{{ $chapter->name }}</option>
+                                            @endif
+                                            @endforeach
+                                        </select>
                                     </div>
                                     @if($user->group_id==0)
                                     <div class="form-group">
