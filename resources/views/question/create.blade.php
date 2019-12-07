@@ -246,7 +246,7 @@
         });
         renderText();
         @if(isset($preview))
-        window.open('{{ env('APP_URL') }}?id={{ $question->id }}');
+        window.open('{{ env('APP_URL') }}/preview/index.html?id={{ $question->id }}');
         @endif
     });
 </script>
