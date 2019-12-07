@@ -112,7 +112,15 @@ class QuestionController extends Controller
         }
         $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
         $question->save();
-        
+        if($request->input('preview')=='true') {
+            return view('question.create', [
+                "course"=>$course,
+                "chapters"=>$chapters,
+                "question"=>$question,
+                "user"=>$user,
+                "preview"=>true,
+            ]);
+        }
         $request->session()->flash('msg_success', 'سوال مورد نظر با موفقیت ثبت شد');
         return redirect('/question/' . $id);
     }
@@ -172,7 +180,15 @@ class QuestionController extends Controller
         }
         $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
         $question->save();
-        
+        if($request->input('preview')=='true') {
+            return view('question.create', [
+                "course"=>$course,
+                "chapters"=>$chapters,
+                "question"=>$question,
+                "user"=>$user,
+                "preview"=>true,
+            ]);
+        }
         $request->session()->flash('msg_success', 'سوال مورد نظر با موفقیت ویرایش شد');
         return redirect('/question/' . $course->id);
 

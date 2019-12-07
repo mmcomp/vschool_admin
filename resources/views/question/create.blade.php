@@ -60,7 +60,7 @@
                                 </div>
                                 <form method="post" id="frm" enctype="multipart/form-data">
                                     @csrf
-                                    <input type="hidden" name="formulas" id="formulas" value='[]' />
+                                    <input type="hidden" name="preview" id="preview" value='false' />
                                     <div class="form-group">
                                         <label for="name">در صورتی که سوال از نوع جای خالی باشد در محل های جای خالی در صورت سوال یک کارکتر * بگذارید</label>
                                     </div>
@@ -148,7 +148,11 @@
                                 </form>
                             </div>
                             <div class="col-xs-12">
-                                <button class="btn btn-primary pull-left" onclick="updatePage();">
+                            <a class="btn btn-success" onclick="updatePage(true);" target="_blank" href="#">
+                                پیش نمایش
+                            </a>
+                            
+                            <button class="btn btn-primary pull-left" onclick="updatePage();">
                                 ذخیره
                                 </button>
                             </div>
@@ -173,7 +177,7 @@
                 <textarea class="form-control notes" ></textarea>
             </div>`);
     }
-    function updatePage() {
+    function updatePage(preview) {
         if($("#question_type").val()=='choice_question') {
             let answerCount = $("div.answer").length
             if(answerCount<2 || answerCount>4) {
@@ -187,6 +191,11 @@
         // });
         // console.log(formulas);
         // $("#formulas").val(JSON.stringify(formulas));
+        if(preview===true) {
+            $("#preview").val('true');
+        }else {
+            $("#preview").val('false');
+        }
         $("#frm").submit();
     }
     function showAnswer(dobj) {
@@ -236,6 +245,9 @@
             renderText();
         });
         renderText();
+        @if(isset($preview))
+        window.open('{{ env('APP_URL') }}?id={{ $question->id }}');
+        @endif
     });
 </script>
 @endsection
