@@ -250,7 +250,7 @@
         });
         renderText();
         @if(isset($preview))
-        previewWindow = window.open('{{ env('APP_URL') }}/preview/index.html?id={{ $question->id }}');
+        previewWindow = window.open('{{ env('APP_URL') }}/preview_{{ $question->question_type }}/index.html?id={{ $question->id }}');
         @endif
     });
 </script>
