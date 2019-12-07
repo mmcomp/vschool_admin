@@ -148,9 +148,9 @@
                                 </form>
                             </div>
                             <div class="col-xs-12">
-                            <a class="btn btn-success" onclick="updatePage(true);" target="_blank" href="#">
+                            <button class="btn btn-success" onclick="updatePage(true);">
                                 پیش نمایش
-                            </a>
+                            </button>
                             
                             <button class="btn btn-primary pull-left" onclick="updatePage();">
                                 ذخیره
@@ -196,6 +196,9 @@
         }else {
             $("#preview").val('false');
         }
+        if(previewWindow) {
+            previewWindow.close();
+        }
         $("#frm").submit();
     }
     function showAnswer(dobj) {
@@ -240,13 +243,14 @@
         });
     }
     var MQ = MathQuill.getInterface(2);
+    var previewWindow;
     $(document).ready(function() {
         $("textarea").blur(function() {
             renderText();
         });
         renderText();
         @if(isset($preview))
-        window.open('{{ env('APP_URL') }}/preview/index.html?id={{ $question->id }}');
+        previewWindow = window.open('{{ env('APP_URL') }}/preview/index.html?id={{ $question->id }}');
         @endif
     });
 </script>
