@@ -40,6 +40,7 @@
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <form method="post" id="frm" enctype="multipart/form-data">
                                     @csrf
+                                    <input type="hidden" name="preview" id="preview" value='false' />
                                     <div class="form-group">
                                         <label for="name">موضوع</label>
                                         <input type="text" class="form-control" id="title" placeholder="موضوع" value="{{ ($page && $page->page && $page->page->title)?$page->page->title:'' }}">
@@ -65,7 +66,7 @@
                                     </div>
                                     @endif
                                     @if($part->type=='formula')
-                                    <div class="form-group answers part">
+                                    <div class="form-group part">
                                         <label for="name">فرمول </label><button class="btn btn-danger pull-left" onclick="removeNote(this, {{$id}});">X</button>
                                         <textarea id="formula_{{$id}}" onblur="renderText();" class="tex latex form-control">{{ $part->data }}</textarea>
                                         <span class="formulas">{{ $part->data }}</span>
@@ -158,6 +159,10 @@
                                 </form>
                             </div>
                             <div class="col-xs-12">
+                                <button class="btn btn-success" onclick="updatePage(true);">
+                                    پیش نمایش
+                                </button>
+
                                 <button class="btn btn-primary pull-left" onclick="updatePage();">
                                 ذخیره
                                 </button>
@@ -255,9 +260,9 @@
                 <textarea id="note_${id}" class="form-control notes" >${data}</textarea>
             </div>`);
     }
-    function updatePage() {
+    function updatePage(preview) {
         if($("#question_type").val()=='choice_question') {
-            let answerCount = $("div.answer").length
+            let answerCount = $("div.answers").length
             if(answerCount<2 || answerCount>4) {
                 alert('تعداد گزینه های سوال چند گزینه ای باید ۲ تا حداکثر ۵ تا باشد');
                 return false;
@@ -278,6 +283,14 @@
             }
         }
         $("#page").val(JSON.stringify(page));
+        if(preview===true) {
+            $("#preview").val('true');
+        }else {
+            $("#preview").val('false');
+        }
+        if(previewWindow) {
+            previewWindow.close();
+        }
         $("#frm").submit();
     }
     function showAnswer(dobj) {
@@ -318,7 +331,7 @@
         if(!data) {
             data = ''
         }
-        $("#end-part").before(`<div class="form-group answers part">
+        $("#end-part").before(`<div class="form-group part">
                 <label for="name">فرمول </label><button class="btn btn-danger pull-left" onclick="removeNote(this, ${id});">X</button>
                 <textarea id="formula_${id}" onblur="renderText();" class="tex latex form-control">${data}</textarea>
                 <span class="formulas">${data}</span>
@@ -383,11 +396,15 @@
         renderData();
     }
     var MQ = MathQuill.getInterface(2);
+    var previewWindow;
     $(document).ready(function() {
         $("textarea").blur(function() {
             renderText();
         });
         renderText();
+        @if(isset($preview))
+        previewWindow = window.open('{{ env('APP_URL') }}/preview_page/index.html?id={{ $page->id }}');
+        @endif
     });
 </script>
 @endsection

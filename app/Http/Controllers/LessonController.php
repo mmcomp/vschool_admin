@@ -315,6 +315,13 @@ class LessonController extends Controller
         $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
         $question->save();
 
+        if($request->input('preview')=='true') {
+            $page->load(['lesson', 'question']);
+            return view('lesson.page_create', [
+                "page"=>$page,
+                "preview"=>true,
+            ]);
+        }
 
         $request->session()->flash('msg_success', 'صفحه مورد نظر با موفقیت ثبت شد');
         return redirect('/lesson/page/' . $id);
@@ -408,6 +415,13 @@ class LessonController extends Controller
             $question->save();
         }
 
+        if($request->input('preview')=='true') {
+            $page->load(['lesson', 'question']);
+            return view('lesson.page_create', [
+                "page"=>$page,
+                "preview"=>true,
+            ]);
+        }
 
         $request->session()->flash('msg_success', 'صفحه مورد نظر با موفقیت بروز شد');
         return redirect('/lesson/page/' . $page->lessons_id);
