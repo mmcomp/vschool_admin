@@ -315,11 +315,11 @@ class LessonController extends Controller
         $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
         $question->save();
 
-        if($request->input('preview')=='true') {
+        if($request->input('preview')!='0') {
             $page->load(['lesson', 'question']);
             return view('lesson.page_create', [
                 "page"=>$page,
-                "preview"=>true,
+                "preview"=>$request->input('preview'),
             ]);
         }
 
@@ -415,11 +415,11 @@ class LessonController extends Controller
             $question->save();
         }
 
-        if($request->input('preview')=='true') {
+        if($request->input('preview')!='0') {
             $page->load(['lesson', 'question']);
             return view('lesson.page_create', [
                 "page"=>$page,
-                "preview"=>true,
+                "preview"=>$request->input('preview'),
             ]);
         }
 

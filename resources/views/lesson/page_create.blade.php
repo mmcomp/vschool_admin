@@ -40,7 +40,7 @@
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <form method="post" id="frm" enctype="multipart/form-data">
                                     @csrf
-                                    <input type="hidden" name="preview" id="preview" value='false' />
+                                    <input type="hidden" name="preview" id="preview" value='0' />
                                     <div class="form-group">
                                         <label for="name">موضوع</label>
                                         <input type="text" class="form-control" id="title" placeholder="موضوع" value="{{ ($page && $page->page && $page->page->title)?$page->page->title:'' }}">
@@ -96,6 +96,9 @@
                                         <a class="btn btn-danger" onclick="rotateData();">
                                         چرخش
                                         </a>
+                                        <button class="btn btn-success" onclick="updatePage(1);">
+                                            پیش نمایش صفحه 
+                                        </button>
                                     </div>
                                     <div class="form-group">
                                         <label for="name">در صورتی که سوال از نوع جای خالی باشد در محل های جای خالی در صورت سوال عبارت ### بگذارید</label>
@@ -159,8 +162,8 @@
                                 </form>
                             </div>
                             <div class="col-xs-12">
-                                <button class="btn btn-success" onclick="updatePage(true);">
-                                    پیش نمایش
+                                <button class="btn btn-success" onclick="updatePage(2);">
+                                    پیش نمایش سوال 
                                 </button>
 
                                 <button class="btn btn-primary pull-left" onclick="updatePage();">
@@ -283,11 +286,7 @@
             }
         }
         $("#page").val(JSON.stringify(page));
-        if(preview===true) {
-            $("#preview").val('true');
-        }else {
-            $("#preview").val('false');
-        }
+        $("#preview").val(preview);
         if(previewWindow) {
             previewWindow.close();
         }
@@ -402,8 +401,10 @@
             renderText();
         });
         renderText();
-        @if(isset($preview))
+        @if(isset($preview) && $preview=='1')
         previewWindow = window.open('{{ env('APP_URL') }}/preview_page/index.html?id={{ $page->id }}');
+        @elseif(isset($preview) && $preview=='2')
+        previewWindow = window.open('{{ env('APP_URL') }}/preview_{{$page->question->question_type}}/index.html?id={{ $page->question->id }}');
         @endif
     });
 </script>
