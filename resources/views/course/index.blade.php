@@ -57,6 +57,9 @@
                                     عدم انتشار
                                     </a>
                                     @endif
+                                    <a target="_blank" class="btn btn-primary" href="/preview_course/index.html?id={{ $course->id }}">
+                                    نقشه
+                                    </a>
                                   </td>
                                 </tr>
                               @endforeach
