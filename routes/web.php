@@ -18,6 +18,11 @@ Route::middleware('auth')->group(function () {
 
     Route::any('/test', 'Controller@test');
 
+    Route::prefix('/setting')->group(function () {
+        Route::any('/', 'SettingController@index');
+        Route::any('/edit/{id}', 'SettingController@edit');
+    });
+
     Route::prefix('/level')->group(function () {
         Route::any('/', 'LevelController@index');
         Route::get('/delete/{id}', 'LevelController@delete');

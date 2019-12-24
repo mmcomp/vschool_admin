@@ -141,6 +141,15 @@ $user = Auth::user();
                   <li class="header">ناوبری اصلی</li>
                   @if($user->group_id==0)
                   <li
+                  @if($current_url=='setting')
+                   class="active"
+                  @endif
+                  >
+                    <a href="/setting">
+                      <i class="fa fa-keyboard"></i> <span>تنظیمات</span> 
+                    </a>
+                  </li>
+                  <li
                   @if($current_url=='course')
                    class="active"
                   @endif
