@@ -316,11 +316,13 @@ class LessonController extends Controller
         $question->save();
 
         if($request->input('preview')!='0') {
-            $page->load(['lesson', 'question']);
-            return view('lesson.page_create', [
-                "page"=>$page,
-                "preview"=>$request->input('preview'),
-            ]);
+            // $page->load(['lesson', 'question']);
+            // return view('lesson.page_create', [
+            //     "page"=>$page,
+            //     "preview"=>$request->input('preview'),
+            // ]);
+            $request->session()->flash('preview', $request->input('preview'));
+            return redirect('/lesson/page_edit/' . $page->id);
         }
 
         $request->session()->flash('msg_success', 'صفحه مورد نظر با موفقیت ثبت شد');
@@ -334,10 +336,15 @@ class LessonController extends Controller
             return redirect('/lesson');
         }
 
+        $preview = $request->session()->get('preview');
+        if($preview==null) {
+            $preview = '0';
+        }
         $page->load(['lesson', 'question']);
         if(!$request->isMethod('post')) {
             return view('lesson.page_create', [
-                "page"=>$page
+                "page"=>$page,
+                "preview"=>$preview,
             ]);
         }
         $oldImages = [];
