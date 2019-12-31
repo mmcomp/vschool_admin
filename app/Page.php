@@ -15,6 +15,6 @@ class Page extends Model
     }
 
     public function question() {
-        return $this->hasOne('App\Question', 'pages_id');
+        return $this->hasMany('App\Question', 'pages_id');
     }
 }

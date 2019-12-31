@@ -251,7 +251,7 @@ class LessonController extends Controller
                 "page"=>$page
             ]);
         }
-
+        // dd($request->all());
         $page_order = DB::table('pages')->where('lessons_id', $id)->max('page_order');
         if($page_order) {
             $page_order++;
@@ -284,36 +284,107 @@ class LessonController extends Controller
         $page->page = $thepage;
         $page->save();
         
-        $question = new Question;
-        $realChoices = [];
-        if($request->input('question_type')!='answer') {
-            $choices = $request->input('choises_answers');
-            foreach($choices as $choice) {
-                $tmp = new \stdClass;
-                $tmp->checked = false;
-                $tmp->answer = $choice;
-                $realChoices[] = $tmp;
-            }
-            $checkedChoices = $request->input('choices');
-            if($checkedChoices) {
-                foreach($checkedChoices as $checkedChoice) {
-                    $tmp = explode('_', $checkedChoice);
-                    $tmp = (int)$tmp[1];
-                    $realChoices[$tmp]->checked = true;
+        $page->load('lesson.chapter');
+
+        if($request->input('question0')) {
+            $question0 = new Question;
+            $realChoices = [];
+            if($request->input('question_type0')!='answer') {
+                $choices = $request->input('choises_answers0');
+                if($choices) {
+                    foreach($choices as $choice) {
+                        $tmp = new \stdClass;
+                        $tmp->checked = false;
+                        $tmp->answer = $choice;
+                        $realChoices[] = $tmp;
+                    }
+                }
+                $checkedChoices = $request->input('choices0');
+                if($checkedChoices) {
+                    foreach($checkedChoices as $checkedChoice) {
+                        $tmp = explode('_', $checkedChoice);
+                        $tmp = (int)$tmp[1];
+                        $realChoices[$tmp]->checked = true;
+                    }
                 }
             }
+            $question0->question = $request->input('question0');
+            $question0->question_type = $request->input('question_type0');
+            $question0->answer = $request->input('answer0');
+            $question0->choices = $realChoices;
+            $question0->score = $request->input('score0');
+            $question0->pages_id = $page->id;
+            $question0->lessons_id = $page->lessons_id;
+            $question0->courses_id = $page->lesson->chapter->courses_id;
+            $question0->solution = (trim($request->input('solution0'))!='')?trim($request->input('solution0')):null;
+            $question0->save();
         }
-        $page->load('lesson.chapter');
-        $question->question = $request->input('question');
-        $question->question_type = $request->input('question_type');
-        $question->answer = $request->input('answer');
-        $question->choices = $realChoices;
-        $question->score = $request->input('score');
-        $question->pages_id = $page->id;
-        $question->lessons_id = $page->lessons_id;
-        $question->courses_id = $page->lesson->chapter->courses_id;
-        $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
-        $question->save();
+        if($request->input('question1')) {
+            $question0 = new Question;
+            $realChoices = [];
+            if($request->input('question_type1')!='answer') {
+                $choices = $request->input('choises_answers1');
+                if($choices) {
+                    foreach($choices as $choice) {
+                        $tmp = new \stdClass;
+                        $tmp->checked = false;
+                        $tmp->answer = $choice;
+                        $realChoices[] = $tmp;
+                    }
+                }
+                $checkedChoices = $request->input('choices1');
+                if($checkedChoices) {
+                    foreach($checkedChoices as $checkedChoice) {
+                        $tmp = explode('_', $checkedChoice);
+                        $tmp = (int)$tmp[1];
+                        $realChoices[$tmp]->checked = true;
+                    }
+                }
+            }
+            $question0->question = $request->input('question1');
+            $question0->question_type = $request->input('question_type1');
+            $question0->answer = $request->input('answer1');
+            $question0->choices = $realChoices;
+            $question0->score = $request->input('score1');
+            $question0->pages_id = $page->id;
+            $question0->lessons_id = $page->lessons_id;
+            $question0->courses_id = $page->lesson->chapter->courses_id;
+            $question0->solution = (trim($request->input('solution1'))!='')?trim($request->input('solution1')):null;
+            $question0->save();
+        }
+        if($request->input('question2')) {
+            $question0 = new Question;
+            $realChoices = [];
+            if($request->input('question_type2')!='answer') {
+                $choices = $request->input('choises_answers2');
+                if($choices) {
+                    foreach($choices as $choice) {
+                        $tmp = new \stdClass;
+                        $tmp->checked = false;
+                        $tmp->answer = $choice;
+                        $realChoices[] = $tmp;
+                    }
+                }
+                $checkedChoices = $request->input('choices2');
+                if($checkedChoices) {
+                    foreach($checkedChoices as $checkedChoice) {
+                        $tmp = explode('_', $checkedChoice);
+                        $tmp = (int)$tmp[1];
+                        $realChoices[$tmp]->checked = true;
+                    }
+                }
+            }
+            $question0->question = $request->input('question2');
+            $question0->question_type = $request->input('question_type2');
+            $question0->answer = $request->input('answer2');
+            $question0->choices = $realChoices;
+            $question0->score = $request->input('score2');
+            $question0->pages_id = $page->id;
+            $question0->lessons_id = $page->lessons_id;
+            $question0->courses_id = $page->lesson->chapter->courses_id;
+            $question0->solution = (trim($request->input('solution2'))!='')?trim($request->input('solution2')):null;
+            $question0->save();
+        }
 
         if($request->input('preview')!='0') {
             // $page->load(['lesson', 'question']);
@@ -342,11 +413,15 @@ class LessonController extends Controller
         }
         $page->load(['lesson', 'question']);
         if(!$request->isMethod('post')) {
+            for($i = 0;$i < count($page->question);$i++) {
+                $page->{'question' . $i} = $page->question[$i];
+            }
             return view('lesson.page_create', [
                 "page"=>$page,
                 "preview"=>$preview,
             ]);
         }
+
         $oldImages = [];
         foreach($page->page->data as $i=>$part) {
             if($part->type=='image') {
@@ -379,6 +454,111 @@ class LessonController extends Controller
         $page->page = $thepage;
         $page->save();
 
+        Question::where('pages_id', $page->id)->delete();
+
+        $page->load('lesson.chapter');
+
+        if($request->input('question0')) {
+            $question0 = new Question;
+            $realChoices = [];
+            if($request->input('question_type0')!='answer') {
+                $choices = $request->input('choises_answers0');
+                if($choices) {
+                    foreach($choices as $choice) {
+                        $tmp = new \stdClass;
+                        $tmp->checked = false;
+                        $tmp->answer = $choice;
+                        $realChoices[] = $tmp;
+                    }
+                }
+                $checkedChoices = $request->input('choices0');
+                if($checkedChoices) {
+                    foreach($checkedChoices as $checkedChoice) {
+                        $tmp = explode('_', $checkedChoice);
+                        $tmp = (int)$tmp[1];
+                        $realChoices[$tmp]->checked = true;
+                    }
+                }
+            }
+            $question0->question = $request->input('question0');
+            $question0->question_type = $request->input('question_type0');
+            $question0->answer = $request->input('answer0');
+            $question0->choices = $realChoices;
+            $question0->score = $request->input('score0');
+            $question0->pages_id = $page->id;
+            $question0->lessons_id = $page->lessons_id;
+            $question0->courses_id = $page->lesson->chapter->courses_id;
+            $question0->solution = (trim($request->input('solution0'))!='')?trim($request->input('solution0')):null;
+            $question0->save();
+        }
+        if($request->input('question1')) {
+            $question0 = new Question;
+            $realChoices = [];
+            if($request->input('question_type1')!='answer') {
+                $choices = $request->input('choises_answers1');
+                if($choices) {
+                    foreach($choices as $choice) {
+                        $tmp = new \stdClass;
+                        $tmp->checked = false;
+                        $tmp->answer = $choice;
+                        $realChoices[] = $tmp;
+                    }
+                }
+                $checkedChoices = $request->input('choices1');
+                if($checkedChoices) {
+                    foreach($checkedChoices as $checkedChoice) {
+                        $tmp = explode('_', $checkedChoice);
+                        $tmp = (int)$tmp[1];
+                        $realChoices[$tmp]->checked = true;
+                    }
+                }
+            }
+            $question0->question = $request->input('question1');
+            $question0->question_type = $request->input('question_type1');
+            $question0->answer = $request->input('answer1');
+            $question0->choices = $realChoices;
+            $question0->score = $request->input('score1');
+            $question0->pages_id = $page->id;
+            $question0->lessons_id = $page->lessons_id;
+            $question0->courses_id = $page->lesson->chapter->courses_id;
+            $question0->solution = (trim($request->input('solution1'))!='')?trim($request->input('solution1')):null;
+            $question0->save();
+        }
+        if($request->input('question2')) {
+            $question0 = new Question;
+            $realChoices = [];
+            if($request->input('question_type2')!='answer') {
+                $choices = $request->input('choises_answers2');
+                if($choices) {
+                    foreach($choices as $choice) {
+                        $tmp = new \stdClass;
+                        $tmp->checked = false;
+                        $tmp->answer = $choice;
+                        $realChoices[] = $tmp;
+                    }
+                }
+                $checkedChoices = $request->input('choices2');
+                if($checkedChoices) {
+                    foreach($checkedChoices as $checkedChoice) {
+                        $tmp = explode('_', $checkedChoice);
+                        $tmp = (int)$tmp[1];
+                        $realChoices[$tmp]->checked = true;
+                    }
+                }
+            }
+            $question0->question = $request->input('question2');
+            $question0->question_type = $request->input('question_type2');
+            $question0->answer = $request->input('answer2');
+            $question0->choices = $realChoices;
+            $question0->score = $request->input('score2');
+            $question0->pages_id = $page->id;
+            $question0->lessons_id = $page->lessons_id;
+            $question0->courses_id = $page->lesson->chapter->courses_id;
+            $question0->solution = (trim($request->input('solution2'))!='')?trim($request->input('solution2')):null;
+            $question0->save();
+        }
+
+        /*
         $realChoices = [];
         if($request->input('question_type')!='answer') {
             $choices = $request->input('choises_answers');
@@ -421,9 +601,13 @@ class LessonController extends Controller
             $question->solution = (trim($request->input('solution'))!='')?trim($request->input('solution')):null;
             $question->save();
         }
+        */
 
         if($request->input('preview')!='0') {
             $page->load(['lesson', 'question']);
+            for($i = 0;$i < count($page->question);$i++) {
+                $page->{'question' . $i} = $page->question[$i];
+            }
             return view('lesson.page_create', [
                 "page"=>$page,
                 "preview"=>$request->input('preview'),

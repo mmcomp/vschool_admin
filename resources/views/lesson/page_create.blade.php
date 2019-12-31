@@ -103,49 +103,50 @@
                                     <div class="form-group">
                                         <label for="name">در صورتی که سوال از نوع جای خالی باشد در محل های جای خالی در صورت سوال عبارت ### بگذارید</label>
                                     </div>
+
                                     <div class="form-group">
-                                        <label for="name">سوال صفحه</label>
-                                        <textarea class="form-control" id="question" name="question" >{{ ($page && $page->question)?$page->question->question:'' }}</textarea>
+                                        <label for="name">سوال اول صفحه</label>
+                                        <textarea class="form-control" id="question0" name="question0" >{{ ($page && $page->question0)?$page->question0->question:'' }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="name">نوع سوال</label>
-                                        <select id="question_type" name="question_type"  class="form-control" onchange="showAnswer(this);">
-                                            <option value="answer"{{ ($page && $page->question && $page->question->question_type=='answer')?' selected':'' }}>متنی</option>
-                                            <option value="choice_question"{{ ($page && $page->question && $page->question->question_type=='choice_question')?' selected':'' }}>چندگزینه</option>
-                                            <option value="fill_blank"{{ ($page && $page->question && $page->question->question_type=='fill_blank')?' selected':'' }}>جای خالی</option>
+                                        <select id="question_type0" name="question_type0"  class="form-control" onchange="showAnswer(this, 0);">
+                                            <option value="answer"{{ ($page && $page->question0 && $page->question0->question_type=='answer')?' selected':'' }}>متنی</option>
+                                            <option value="choice_question"{{ ($page && $page->question0 && $page->question0->question_type=='choice_question')?' selected':'' }}>چندگزینه</option>
+                                            <option value="fill_blank"{{ ($page && $page->question0 && $page->question0->question_type=='fill_blank')?' selected':'' }}>جای خالی</option>
                                         </select>
                                     </div>
-                                    @if(($page && $page->question && $page->question->question_type=='answer') || !($page->question))
-                                    <div class="form-group" id="answer-div">
+                                    @if(($page && $page->question0 && $page->question0->question_type=='answer') || !($page->question0))
+                                    <div class="form-group" id="answer-div0">
                                         <label for="name">پاسخ</label>
-                                        <textarea class="form-control" name="answer" >{{ ($page && $page->question)?$page->question->answer:'' }}</textarea>
+                                        <textarea class="form-control" name="answer0" >{{ ($page && $page->question0)?$page->question0->answer:'' }}</textarea>
                                     </div>
-                                    <div class="form-group" id="answers-div" style="display: none;">
-                                        <a class="btn btn-primary" onclick="addAnswer();">
+                                    <div class="form-group" id="answers-div0" style="display: none;">
+                                        <a class="btn btn-primary" onclick="addAnswer(0);">
                                         پاسخ
                                         </a>                                    
                                     </div>
-                                    @elseif($page && $page->question && $page->question->question_type!='answer')
-                                    <div class="form-group" id="answer-div" style="display: none;">
+                                    @elseif($page && $page->question0 && $page->question0->question_type!='answer')
+                                    <div class="form-group" id="answer-div0" style="display: none;">
                                         <label for="name">پاسخ</label>
-                                        <textarea class="form-control" name="answer" >{{ ($page && $page->question)?$page->question->answer:'' }}</textarea>
+                                        <textarea class="form-control" name="answer0" >{{ ($page && $page->question0)?$page->question0->answer:'' }}</textarea>
                                     </div>
-                                    <div class="form-group" id="answers-div">
-                                        <a class="btn btn-primary" onclick="addAnswer();">
+                                    <div class="form-group" id="answers-div0">
+                                        <a class="btn btn-primary" onclick="addAnswer(0);">
                                         پاسخ
                                         </a> 
-                                        @if($page && $page->question && $page->question->choices)
-                                        @foreach($page->question->choices as $i=>$ans)
+                                        @if($page && $page->question0 && $page->question0->choices)
+                                        @foreach($page->question0->choices as $i=>$ans)
                                         <div class="form-group answers">
-                                            <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this);">X</a>
-                                            @if($page->question->question_type!='fill_blank')
-                                            <input type="checkbox" class="answers-data-check" name="choices[]" value="choises_{{ $i }}"
+                                            <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this, 0);">X</a>
+                                            @if($page->question0->question_type!='fill_blank')
+                                            <input type="checkbox" class="answers-data-check" name="choices0[]" value="choises0_{{ $i }}"
                                             @if($ans->checked)
                                             checked
                                             @endif
                                              />
                                             @endif
-                                            <textarea class="form-control answers-data" name="choises_answers[]" >{{ $ans->answer }}</textarea>
+                                            <textarea class="form-control answers-data" name="choises_answers0[]" >{{ $ans->answer }}</textarea>
                                         </div>
                                         @endforeach
                                         @endif                                
@@ -153,12 +154,127 @@
                                     @endif
                                     <div class="form-group">
                                         <label for="name">راه حل</label>
-                                        <textarea  class="form-control" name="solution" >{{ ($page && $page->question && $page->question->solution)?$page->question->solution:'' }}</textarea>
+                                        <textarea  class="form-control" name="solution0" >{{ ($page && $page->question0 && $page->question0->solution)?$page->question0->solution:'' }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="name">امتیاز</label>
-                                        <input type="number" class="form-control" name="score" placeholder="امتیاز" value="{{ ($page && $page->question)?$page->question->score:'0' }}">
+                                        <input type="number" class="form-control" name="score0" placeholder="امتیاز" value="{{ ($page && $page->question0)?$page->question0->score:'0' }}">
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="name">سوال دوم صفحه</label>
+                                        <textarea class="form-control" id="question1" name="question1" >{{ ($page && $page->question1)?$page->question1->question:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">نوع سوال</label>
+                                        <select id="question_type1" name="question_type1"  class="form-control" onchange="showAnswer(this, 1);">
+                                            <option value="answer"{{ ($page && $page->question1 && $page->question1->question_type=='answer')?' selected':'' }}>متنی</option>
+                                            <option value="choice_question"{{ ($page && $page->question1 && $page->question1->question_type=='choice_question')?' selected':'' }}>چندگزینه</option>
+                                            <option value="fill_blank"{{ ($page && $page->question1 && $page->question1->question_type=='fill_blank')?' selected':'' }}>جای خالی</option>
+                                        </select>
+                                    </div>
+                                    @if(($page && $page->question1 && $page->question1->question_type=='answer') || !($page->question1))
+                                    <div class="form-group" id="answer-div1">
+                                        <label for="name">پاسخ</label>
+                                        <textarea class="form-control" name="answer1" >{{ ($page && $page->question1)?$page->question1->answer:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group" id="answers-div1" style="display: none;">
+                                        <a class="btn btn-primary" onclick="addAnswer(1);">
+                                        پاسخ
+                                        </a>                                    
+                                    </div>
+                                    @elseif($page && $page->question1 && $page->question1->question_type!='answer')
+                                    <div class="form-group" id="answer-div1" style="display: none;">
+                                        <label for="name">پاسخ</label>
+                                        <textarea class="form-control" name="answer1" >{{ ($page && $page->question1)?$page->question1->answer:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group" id="answers-div1">
+                                        <a class="btn btn-primary" onclick="addAnswer(1);">
+                                        پاسخ
+                                        </a> 
+                                        @if($page && $page->question1 && $page->question1->choices)
+                                        @foreach($page->question1->choices as $i=>$ans)
+                                        <div class="form-group answers">
+                                            <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this, 1);">X</a>
+                                            @if($page->question1->question_type!='fill_blank')
+                                            <input type="checkbox" class="answers-data-check" name="choices1[]" value="choises1_{{ $i }}"
+                                            @if($ans->checked)
+                                            checked
+                                            @endif
+                                             />
+                                            @endif
+                                            <textarea class="form-control answers-data" name="choises_answers1[]" >{{ $ans->answer }}</textarea>
+                                        </div>
+                                        @endforeach
+                                        @endif                                
+                                    </div>
+                                    @endif
+                                    <div class="form-group">
+                                        <label for="name">راه حل</label>
+                                        <textarea  class="form-control" name="solution1" >{{ ($page && $page->question1 && $page->question1->solution)?$page->question1->solution:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">امتیاز</label>
+                                        <input type="number" class="form-control" name="score1" placeholder="امتیاز" value="{{ ($page && $page->question1)?$page->question1->score:'0' }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="name">سوال سوم صفحه</label>
+                                        <textarea class="form-control" id="question2" name="question2" >{{ ($page && $page->question2)?$page->question2->question:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">نوع سوال</label>
+                                        <select id="question_type2" name="question_type2"  class="form-control" onchange="showAnswer(this, 2);">
+                                            <option value="answer"{{ ($page && $page->question2 && $page->question2->question_type=='answer')?' selected':'' }}>متنی</option>
+                                            <option value="choice_question"{{ ($page && $page->question2 && $page->question2->question_type=='choice_question')?' selected':'' }}>چندگزینه</option>
+                                            <option value="fill_blank"{{ ($page && $page->question2 && $page->question2->question_type=='fill_blank')?' selected':'' }}>جای خالی</option>
+                                        </select>
+                                    </div>
+                                    @if(($page && $page->question2 && $page->question2->question_type=='answer') || !($page->question2))
+                                    <div class="form-group" id="answer-div2">
+                                        <label for="name">پاسخ</label>
+                                        <textarea class="form-control" name="answer2" >{{ ($page && $page->question2)?$page->question2->answer:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group" id="answers-div2" style="display: none;">
+                                        <a class="btn btn-primary" onclick="addAnswer(2);">
+                                        پاسخ
+                                        </a>                                    
+                                    </div>
+                                    @elseif($page && $page->question2 && $page->question2->question_type!='answer')
+                                    <div class="form-group" id="answer-div2" style="display: none;">
+                                        <label for="name">پاسخ</label>
+                                        <textarea class="form-control" name="answer" >{{ ($page && $page->question2)?$page->question2->answer:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group" id="answers-div2">
+                                        <a class="btn btn-primary" onclick="addAnswer(2);">
+                                        پاسخ
+                                        </a> 
+                                        @if($page && $page->question2 && $page->question2->choices)
+                                        @foreach($page->question2->choices as $i=>$ans)
+                                        <div class="form-group answers">
+                                            <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this, 2);">X</a>
+                                            @if($page->question2->question_type!='fill_blank')
+                                            <input type="checkbox" class="answers-data-check" name="choices2[]" value="choises2_{{ $i }}"
+                                            @if($ans->checked)
+                                            checked
+                                            @endif
+                                             />
+                                            @endif
+                                            <textarea class="form-control answers-data" name="choises_answers2[]" >{{ $ans->answer }}</textarea>
+                                        </div>
+                                        @endforeach
+                                        @endif                                
+                                    </div>
+                                    @endif
+                                    <div class="form-group">
+                                        <label for="name">راه حل</label>
+                                        <textarea  class="form-control" name="solution2" >{{ ($page && $page->question2 && $page->question2->solution)?$page->question2->solution:'' }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">امتیاز</label>
+                                        <input type="number" class="form-control" name="score2" placeholder="امتیاز" value="{{ ($page && $page->question2)?$page->question2->score:'0' }}">
+                                    </div>
+
                                 </form>
                             </div>
                             <div class="col-xs-12">
@@ -292,36 +408,36 @@
         }
         $("#frm").submit();
     }
-    function showAnswer(dobj) {
+    function showAnswer(dobj, i) {
         var question_type = $(dobj).find('option:selected').val();
         console.log('Question type', question_type);
         if(question_type=='answer') {
-            $(".answers").remove();
-            $("#answer-div").show();
-            $("#answers-div").hide();
+            $(".answers" + i).remove();
+            $("#answer-div" + i).show();
+            $("#answers-div" + i).hide();
         }else {
-            $("#answer-div").hide();
-            $("#answers-div").show();
+            $("#answer-div" + i).hide();
+            $("#answers-div" + i).show();
         }
     }
-    function addAnswer() {
-        var i = $(".answers-data-check").length
+    function addAnswer(i) {
+        var thei = $(".answers-data-check" + i).length
         if($("#question_type").val()=='fill_blank') {
-            $("#answers-div").append(`<div class="form-group answers">
-                    <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this);">X</a>
-                    <textarea class="form-control answers-data" name="choises_answers[]" ></textarea>
+            $("#answers-div" + i).append(`<div class="form-group answers answers${i}">
+                    <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this, ${i});">X</a>
+                    <textarea class="form-control answers-data" name="choises_answers${i}[]" ></textarea>
                 </div>`);
         }else {
-            $("#answers-div").append(`<div class="form-group answers">
-                    <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this);">X</a>
-                    <input type="checkbox" class="answers-data-check" name="choices[]" value="choises_${ i }" />
-                    <textarea class="form-control answers-data" name="choises_answers[]" ></textarea>
+            $("#answers-div" + i).append(`<div class="form-group answers answers${i}">
+                    <label for="name">گزینه</label><a class="btn btn-danger pull-left" onclick="removeChoice(this, ${i});">X</a>
+                    <input type="checkbox" class="answers-data-check${i}" name="choices${i}[]" value="choises_${ i }" />
+                    <textarea class="form-control answers-data" name="choises_answers${i}[]" ></textarea>
                 </div>`);
         }
     }
-    function removeChoice(dobj) {
+    function removeChoice(dobj, i) {
         $(dobj).parent().remove();
-        $(".answers-data-check").each(function(id, field) {
+        $(".answers-data-check" + i).each(function(id, field) {
             $(field).val(`choises_${id}`);
         });
     }
