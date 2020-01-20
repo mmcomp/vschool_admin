@@ -256,7 +256,8 @@ $user = Auth::user();
     <!-- jQuery 2.1.4 -->
     <script src="/admin/plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- jQuery UI 1.11.4 -->
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <!-- <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"> -->
+    <script src="/admin/plugins/jQueryUI/jquery-ui.min.js">
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <!-- Bootstrap 3.3.4 -->
     <script src="/admin/bootstrap/js/bootstrap.min.js"></script>

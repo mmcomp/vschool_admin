@@ -243,7 +243,7 @@
                                     @elseif($page && $page->question2 && $page->question2->question_type!='answer')
                                     <div class="form-group" id="answer-div2" style="display: none;">
                                         <label for="name">پاسخ</label>
-                                        <textarea class="form-control" name="answer" >{{ ($page && $page->question2)?$page->question2->answer:'' }}</textarea>
+                                        <textarea class="form-control" name="answer2" >{{ ($page && $page->question2)?$page->question2->answer:'' }}</textarea>
                                     </div>
                                     <div class="form-group" id="answers-div2">
                                         <a class="btn btn-primary" onclick="addAnswer(2);">
@@ -520,7 +520,7 @@
         @if(isset($preview) && $preview=='1')
         previewWindow = window.open('{{ env('APP_URL') }}/preview_page/index.html?id={{ $page->id }}');
         @elseif(isset($preview) && $preview=='2')
-        previewWindow = window.open('{{ env('APP_URL') }}/preview_{{$page->question->question_type}}/index.html?id={{ $page->question->id }}');
+        previewWindow = window.open('{{ env('APP_URL') }}/preview_{{$page->question0->question_type}}/index.html?id={{ $page->question0->id }}');
         @endif
     });
 </script>
