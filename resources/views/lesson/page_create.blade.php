@@ -279,7 +279,13 @@
                             </div>
                             <div class="col-xs-12">
                                 <button class="btn btn-success" onclick="updatePage(2);">
-                                    پیش نمایش سوال 
+                                    پیش نمایش سوال اول
+                                </button>
+                                <button class="btn btn-success" onclick="updatePage(3);">
+                                    پیش نمایش سوال دوم
+                                </button>
+                                <button class="btn btn-success" onclick="updatePage(4);">
+                                    پیش نمایش سوال سوم
                                 </button>
 
                                 <button class="btn btn-primary pull-left" onclick="updatePage();">
@@ -519,8 +525,12 @@
         renderText();
         @if(isset($preview) && $preview=='1')
         previewWindow = window.open('{{ env('APP_URL') }}/preview_page/index.html?id={{ $page->id }}');
-        @elseif(isset($preview) && $preview=='2')
+        @elseif(isset($preview) && $preview=='2' && $page->question0)
         previewWindow = window.open('{{ env('APP_URL') }}/preview_{{$page->question0->question_type}}/index.html?id={{ $page->question0->id }}');
+        @elseif(isset($preview) && $preview=='3' && $page->question1)
+        previewWindow = window.open('{{ env('APP_URL') }}/preview_{{$page->question1->question_type}}/index.html?id={{ $page->question1->id }}');
+        @elseif(isset($preview) && $preview=='4' && $page->question2)
+        previewWindow = window.open('{{ env('APP_URL') }}/preview_{{$page->question2->question_type}}/index.html?id={{ $page->question2->id }}');
         @endif
     });
 </script>
