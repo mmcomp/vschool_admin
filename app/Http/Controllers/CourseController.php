@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Course;
+use App\Question;
 
 class CourseController extends Controller
 {
@@ -77,6 +78,11 @@ class CourseController extends Controller
     }
 
     public function delete(Request $request, $id) {
+        $coursesEnabled = Course::where('published', 1)->count();
+        if($coursesEnabled<=3) {
+            $request->session()->flash('msg_danger', 'تعداد دوره های فعال کمتر از ۳ نباید شود');
+            return redirect('/course');
+        }
         $course = Course::find($id);
         if(!$course) {
             $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
@@ -129,6 +135,12 @@ class CourseController extends Controller
             return redirect('/course');
         }
 
+        $questionCount = Question::where('courses_id', $course->id)->count();
+        if($questionCount<=3) {
+            $request->session()->flash('msg_danger', 'دوره مورد نظر کمتر از ۳ سوال دارد');
+            return redirect('/course');
+        }
+
         $course->published = 1;
         $course->save();
         
@@ -137,6 +149,11 @@ class CourseController extends Controller
     }
 
     public function unpublish(Request $request, $id) {
+        $coursesEnabled = Course::where('published', 1)->count();
+        if($coursesEnabled<=3) {
+            $request->session()->flash('msg_danger', 'تعداد دوره های فعال کمتر از ۳ نباید شود');
+            return redirect('/course');
+        }
         $course = Course::find($id);
         if(!$course) {
             $request->session()->flash('msg_danger', 'دوره مورد نظر پیدا نشد');
