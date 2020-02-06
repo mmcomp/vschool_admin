@@ -49,6 +49,9 @@ class CourseController extends Controller
         $course->name = $request->input('name');
         $course->duel_time = ((int)$request->input('duel_time')<=0)?100:(int)$request->input('duel_time');
         $course->description = $request->input('description');
+        $course->monthly_price = $request->input('monthly_price');
+        $course->half_annual_price = $request->input('half_annual_price');
+        $course->annually_price = $request->input('annually_price');
         $course->save();
         
         $request->session()->flash('msg_success', 'دوره مورد نظر با موفقیت ثبت شد');
@@ -71,6 +74,9 @@ class CourseController extends Controller
         $course->name = $request->input('name');
         $course->duel_time = ((int)$request->input('duel_time')<=0)?100:(int)$request->input('duel_time');
         $course->description = $request->input('description');
+        $course->monthly_price = $request->input('monthly_price');
+        $course->half_annual_price = $request->input('half_annual_price');
+        $course->annually_price = $request->input('annually_price');
         $course->save();
         
         $request->session()->flash('msg_success', 'دوره مورد نظر با موفقیت بروز شد');
